@@ -2,8 +2,9 @@ cmake_minimum_required (VERSION 3.8)
 
 set (PROJECT rt)
 set (SOURCE_EXE main.cpp)
-#set (HEADERS Shader.h)
-
+include_directories(
+	glm-0.9.7.1/
+)
 project (${PROJECT})
 
 # get rid of annoying MSVC warnings.
@@ -29,7 +30,5 @@ enable_cxx_compiler_flag_if_supported("-std=c++11")
 enable_cxx_compiler_flag_if_supported("-O3")
 enable_cxx_compiler_flag_if_supported("-fopenmp")
 
-file(GLOB SOURCES *.h *.cpp)
-
-add_executable(${PROJECT_NAME} ${SOURCE_EXE} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCE_EXE} ${HEADERS})
 
