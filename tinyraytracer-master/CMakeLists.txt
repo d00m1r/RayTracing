@@ -1,16 +1,5 @@
-cmake_minimum_required (VERSION 3.8)
-
-set (PROJECT rt)
-set (SOURCE_EXE main.cpp)
-set (HEADERS BMP/EasyBMP.h)
-include_directories(
-	glm-0.9.7.1/
-    BMP/
-)
-project (${PROJECT})
-
-# get rid of annoying MSVC warnings.
-add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+cmake_minimum_required (VERSION 2.8)
+project (tinyraytracer)
 
 include(CheckCXXCompilerFlag)
 
@@ -32,5 +21,7 @@ enable_cxx_compiler_flag_if_supported("-std=c++11")
 enable_cxx_compiler_flag_if_supported("-O3")
 enable_cxx_compiler_flag_if_supported("-fopenmp")
 
-add_executable(${PROJECT_NAME} ${SOURCE_EXE} ${HEADERS})
+file(GLOB SOURCES *.h *.cpp)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
 
