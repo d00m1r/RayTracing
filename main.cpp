@@ -80,9 +80,11 @@ class Sphere{
 };
 
 
-glm::vec3 beam_shot(const Ray& ray, Sphere& sphere, float min_t, float max_t){
-    if (sphere.check_hit(ray, min_t, max_t)){
-        return sphere.color;
+glm::vec3 beam_shot(const Ray& ray,  std::vector<Sphere>& sphere_list, float min_t, float max_t){
+    for(long unsigned int i = 0; i < sphere_list.size(); i++){
+        if (sphere_list[i].check_hit(ray, min_t, max_t)){
+            return sphere_list[i].color;
+        }
     }
     return glm::vec3(0.1f, 0.1f, 0.1f); // BCKG col
 }
@@ -92,14 +94,19 @@ void make_render(){
     std::vector<glm::vec3> buffer(win.width * win.height);
     glm::vec3 O(0.0f, 0.0f, 0.0f);//камера
     int displacement = win.width;
-    Sphere sphere(glm::vec3(0.0f,0.0f,-5.0f), glm::vec3(1.0f,0.0f,0.0f), 0.5f);
+
+    std::vector<Sphere> sphere_list{
+        Sphere (glm::vec3(-1.0f,0.0f,-5.0f), glm::vec3(1.0f,0.0f,0.0f), 0.5f),
+        Sphere (glm::vec3(0.0f,-1.0f,-7.0f), glm::vec3(0.0f,1.0f,0.0f), 0.7f),
+        Sphere (glm::vec3(1.0f, 0.0f,-5.0f), glm::vec3(0.0f,0.0f,1.0f), 0.3f)
+    };
     float min_t = 0.0f;
     float max_t = 9999.0f;
 
     for (int j = 0; j < win.height; j++){
         for (int i = 0; i < win.width; i++){
             Ray ray ( O, ray_dir(i, j, win));//уже нормализованный
-            buffer[j * displacement + i] = beam_shot(ray, sphere, min_t, max_t);//ret col
+            buffer[j * displacement + i] = beam_shot(ray, sphere_list, min_t, max_t);//ret col
         }
     }
     char name[] = "scene.bmp";
