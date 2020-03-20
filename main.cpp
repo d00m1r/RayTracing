@@ -59,10 +59,11 @@ class Light
 };
 
 float light_intensity(const Ray& ray, const std::vector<Light>& light_list, const glm::vec3& p, const glm::vec3& n, int shine){
-    float inten = 0;
+    float inten = 0.1;
     for(long unsigned int i = 0; i < light_list.size(); i++){
         glm::vec3 l = light_list[i].pos - p;
         glm::normalize(l);
+        
         //Диффузия
         float nl = dot(n, l);
         if (nl > 0){
@@ -71,8 +72,9 @@ float light_intensity(const Ray& ray, const std::vector<Light>& light_list, cons
 
         //Зеркальность
         if (shine != -1) {
-            glm::vec3 r = l-dot(n, l)*2.0f*n;//СМЕНА ЗНАКА
+            glm::vec3 r = l-2.0f*n*dot(n, l);//СМЕНА ЗНАКА
             float rv = dot(r, -ray.dir);
+            //inten += light_list[i].inten * pow(std::max(0.f, dot(r, l)), shine);
             if (rv > 0){
                 inten += light_list[i].inten*pow(rv/(glm::length(r) * glm::length(-ray.dir)), shine);
                 //inten += light_list[i].inten * pow(glm::normalize(rv), shine);
@@ -136,15 +138,15 @@ void make_render(){
     int displacement = win.width;
 
     std::vector<Sphere> sphere_list{
-        Sphere (glm::vec3(0.2f, 0.3f,-10.0f), glm::vec3(1.f,1.f,0.f), 1.2f, 1000),
-        Sphere (glm::vec3(-0.7f, 0.3f,-5.0f), glm::vec3(1.f,0.0f,0.0f), 0.5f, 700),
-        Sphere (glm::vec3(0.2f, -0.5f,-7.0f), glm::vec3(0.0f,1.f,0.0f), 0.7f, 500),
-        Sphere (glm::vec3(0.9f, 0.4f, -5.0f), glm::vec3(0.0f,0.0f,1.f), 0.3f, 300),
+        Sphere (glm::vec3(0.2f, 0.3f,-10.0f), glm::vec3(1.f,1.f,0.f), 1.2f, 10),
+        Sphere (glm::vec3(-0.7f, 0.3f,-5.0f), glm::vec3(1.f,0.0f,0.0f), 0.5f, 90),
+        Sphere (glm::vec3(0.2f, -0.5f,-7.0f), glm::vec3(0.0f,1.f,0.0f), 0.7f, 50),
+        Sphere (glm::vec3(0.9f, 0.4f, -5.0f), glm::vec3(0.0f,0.0f,1.f), 0.3f, 50),
     };
 
     std::vector<Light> light_list{
-        Light(glm::vec3(1.7f,-12.0f,-14.0f), glm::vec3(1.0f,1.0f,1.0f), 0.5f),
-        Light(glm::vec3(-9.1f,-13.0f,-18.0f), glm::vec3(1.0f,1.0f,1.0f), 0.5f)
+        Light(glm::vec3(1.7f,-12.0f,-14.0f), glm::vec3(1.0f,1.0f,1.0f), 0.3f),
+        Light(glm::vec3(-9.1f,-13.0f,-18.0f), glm::vec3(1.0f,1.0f,1.0f), 0.4f)
     };
 
     float min_t = 0;
