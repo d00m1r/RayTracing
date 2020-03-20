@@ -697,13 +697,9 @@ EasyBMP_VariousBMPutilities.h
 /home/d/projects/rt/main.cpp
 iostream
 -
-fstream
--
 cmath
 -
 vector
--
-string
 -
 glm/glm.hpp
 -

@@ -1,8 +1,6 @@
 #include <iostream>
-#include <fstream>
 #include <cmath>
 #include <vector>
-#include <string>
 
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp>
@@ -36,8 +34,8 @@ void save_image(Window win, std::vector<glm::vec3> buffer, char* name){
 
 class Ray{
     public:
-        Ray(){}
         Ray(const glm::vec3& orig, const glm::vec3& direction): start(orig), dir(direction){};
+        ~Ray(){};
         glm::vec3 start;
         glm::vec3 dir;
 };
@@ -50,10 +48,18 @@ glm::vec3 ray_dir(int i, int j, Window win){
     return glm::normalize(dir);
 }
 
+class LightSource
+{
+    public:
+        LightSource(const glm::vec3& col): color(col){};
+        ~LightSource(){};
+        glm::vec3 color;
+};
+
 class Sphere{
     public:
         Sphere(){}
-        Sphere(glm::vec3 cen, glm::vec3 col, float rad): center(cen), color(col), radius(rad){};
+        Sphere(const glm::vec3& cen, const glm::vec3& col, float rad): center(cen), color(col), radius(rad){};
         glm::vec3 center;
         glm::vec3 color;
         float radius;
@@ -80,7 +86,7 @@ class Sphere{
 };
 
 
-glm::vec3 beam_shot(const Ray& ray,  std::vector<Sphere>& sphere_list, float min_t, float max_t){
+glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& sphere_list, float min_t, float max_t){
     for(long unsigned int i = 0; i < sphere_list.size(); i++){
         if (sphere_list[i].check_hit(ray, min_t, max_t)){
             return sphere_list[i].color;
@@ -97,11 +103,11 @@ void make_render(){
 
     std::vector<Sphere> sphere_list{
         Sphere (glm::vec3(-1.0f,0.0f,-5.0f), glm::vec3(1.0f,0.0f,0.0f), 0.5f),
-        Sphere (glm::vec3(0.0f,-1.0f,-7.0f), glm::vec3(0.0f,1.0f,0.0f), 0.7f),
-        Sphere (glm::vec3(1.0f, 0.0f,-5.0f), glm::vec3(0.0f,0.0f,1.0f), 0.3f)
+        Sphere (glm::vec3(0.0f, -1.0f,-7.0f), glm::vec3(0.0f,1.0f,0.0f), 0.7f),
+        Sphere (glm::vec3(0.7f, 0.0f,-5.0f), glm::vec3(0.0f,0.0f,1.0f), 0.3f)
     };
     float min_t = 0.0f;
-    float max_t = 9999.0f;
+    float max_t = 999999.0f;
 
     for (int j = 0; j < win.height; j++){
         for (int i = 0; i < win.width; i++){
