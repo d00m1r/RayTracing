@@ -48,14 +48,27 @@ glm::vec3 ray_dir(int i, int j, Window win){
     return glm::normalize(dir);
 }
 
-class LightSource
+class Light
 {
     public:
-        LightSource(const glm::vec3& col): color(col){};
-        ~LightSource(){};
+        Light(const glm::vec3&position, const glm::vec3& col, float intensity): color(col), pos(position), inten(intensity){};
+        ~Light(){};
         glm::vec3 color;
+        glm::vec3 pos;
+        float inten;
 };
 
+float light_intensity(const std::vector<Light>& light_list, glm::vec3 p, glm::vec3 n){
+    float inten = 0;
+    for(long unsigned int i = 0; i < light_list.size(); i++){
+        glm::vec3 l = light_list[i].pos - p;
+        float nl = dot(n, l);
+            if (nl > 0){
+                inten += light_list[i].inten * std::max(0.0f,nl);
+            }
+    }
+    return inten; 
+}
 class Sphere{
     public:
         Sphere(){}
@@ -64,20 +77,22 @@ class Sphere{
         glm::vec3 color;
         float radius;
 
-        bool check_hit(const Ray& ray, float min_t, float max_t){
+        bool check_hit(const Ray& ray, float min_t, float max_t, float& sol)const{
 
             glm::vec3 oc = ray.start - center;
-            float a = dot(ray.dir, ray.dir);
+            float a = dot(ray.dir, ray.dir);//ОПТИМИЗИРОВАТЬ
             float b = dot(oc, ray.dir)*2;
             float c = dot(oc, oc) - radius*radius;
             float D = b*b - 4*a*c;
             if (D > 0){
                 float solution = (-b + sqrt(D))/(2*a);
                 if (solution > min_t && solution < max_t){
+                    sol = solution;
                     return true;
                 }
                 solution = (-b - sqrt(D))/(2*a);
                 if (solution > min_t && solution < max_t){
+                    sol = solution;
                     return true;
                 }
             }
@@ -86,10 +101,14 @@ class Sphere{
 };
 
 
-glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& sphere_list, float min_t, float max_t){
+glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& sphere_list, const std::vector<Light>& light_list, float min_t, float max_t, const glm::vec3& O){
     for(long unsigned int i = 0; i < sphere_list.size(); i++){
-        if (sphere_list[i].check_hit(ray, min_t, max_t)){
-            return sphere_list[i].color;
+        float sol = 0;
+        if (sphere_list[i].check_hit(ray, min_t, max_t, sol)){
+            glm::vec3 p = O + sol*ray.dir;//вычисление пересечения
+            glm::vec3 n = p - sphere_list[i].center;//вычисление нормали сферы в точке пересечения
+            glm::normalize(n);
+            return sphere_list[i].color * light_intensity(light_list, p, n);
         }
     }
     return glm::vec3(0.1f, 0.1f, 0.1f); // BCKG col
@@ -102,17 +121,22 @@ void make_render(){
     int displacement = win.width;
 
     std::vector<Sphere> sphere_list{
-        Sphere (glm::vec3(-1.0f,0.0f,-5.0f), glm::vec3(1.0f,0.0f,0.0f), 0.5f),
-        Sphere (glm::vec3(0.0f, -1.0f,-7.0f), glm::vec3(0.0f,1.0f,0.0f), 0.7f),
-        Sphere (glm::vec3(0.7f, 0.0f,-5.0f), glm::vec3(0.0f,0.0f,1.0f), 0.3f)
+        Sphere (glm::vec3(-0.7f,0.3f,-5.0f), glm::vec3(1.0f,0.0f,0.0f), 0.5f),
+        Sphere (glm::vec3(0.2f, -0.5f,-7.0f), glm::vec3(0.0f,1.0f,0.0f), 0.7f),
+        Sphere (glm::vec3(0.9f, 0.4f,-5.0f), glm::vec3(0.0f,0.0f,1.0f), 0.3f)
     };
-    float min_t = 0.0f;
+
+    std::vector<Light> light_list{
+        Light(glm::vec3(0.7f,-10.0f,-16.0f), glm::vec3(1.0f,1.0f,1.0f), 0.1f)
+    };
+
+    float min_t = 0;
     float max_t = 999999.0f;
 
     for (int j = 0; j < win.height; j++){
         for (int i = 0; i < win.width; i++){
             Ray ray ( O, ray_dir(i, j, win));//уже нормализованный
-            buffer[j * displacement + i] = beam_shot(ray, sphere_list, min_t, max_t);//ret col
+            buffer[j * displacement + i] = beam_shot(ray, sphere_list, light_list, min_t, max_t, O);//ret col
         }
     }
     char name[] = "scene.bmp";
