@@ -48,8 +48,8 @@ glm::vec3 ray_dir(int i, int j, Window win){
     return glm::normalize(dir);
 }
 
-class Light
-{
+
+class Light{
     public:
         Light(const glm::vec3&position, const glm::vec3& col, float intensity): color(col), pos(position), inten(intensity){};
         ~Light(){};
@@ -61,22 +61,24 @@ class Light
 class Sphere{
     public:
         Sphere(){}
-        Sphere(const glm::vec3& cen, const glm::vec3& col, float rad, int sh): center(cen), color(col), radius(rad), shine(sh){};
+        Sphere(const glm::vec3& cen, const glm::vec3& col, float rad, int sh, float reflective): center(cen), color(col), radius(rad), shine(sh), reflect(reflective){};
 
         glm::vec3 center;
         glm::vec3 color;
         float radius;
         int shine;
+        float reflect;
 
         Sphere& operator=(const Sphere& right) {
             //проверка на самоприсваивание
             if (this == &right) {
                 return *this;
             }
-            radius = right.radius;
-            shine  = right.shine;
-            center = right.center;
-            color  = right.color;
+            radius  = right.radius;
+            shine   = right.shine;
+            reflect = right.reflect;
+            center  = right.center;
+            color   = right.color;
             return *this;
         }
 
@@ -161,8 +163,11 @@ float light_intensity(const Ray& ray, const std::vector<Sphere>& sphere_list,
     return inten; 
 }
 
+glm::vec3 reflect(const glm::vec3&dir, glm::vec3 n, const glm::vec3& O){
+    return dot(n, dir)*2.f*n - dir;
+}
 
-glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& sphere_list, const std::vector<Light>& light_list, float min_t, float max_t, const glm::vec3& O){
+glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& sphere_list, const std::vector<Light>& light_list, float min_t, float max_t, const glm::vec3& O, int depth){
     
     Sphere cl_obj;
     float cl_sol = determine_closest_object(ray, sphere_list, min_t, max_t, cl_obj);
@@ -171,7 +176,17 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& sphere_list, cons
         glm::vec3 n = p - cl_obj.center;//вычисление нормали сферы в точке пересечения
         //glm::normalize(n);
         n = n / glm::length(n);
-        return cl_obj.color * light_intensity(ray, sphere_list, light_list, p, n, cl_obj.shine, max_t);
+
+        glm::vec3 local_color =  cl_obj.color * light_intensity(ray, sphere_list, light_list, p, n, cl_obj.shine, max_t);
+        if(depth < 1 || cl_obj.reflect < 0){
+            return local_color;
+        }
+
+        glm::vec3 reflect_dir = reflect(ray.dir, n);
+        glm::vec3 reflect_orig = dot(reflect_dir, n) < 0.f ? p - n * 0.001f : p + n * 0.001f;
+        Ray ref_ray(reflect_orig, reflect_dir);
+        glm::vec3 reflected_color = beam_shot(ref_ray, sphere_list, light_list, min_t, max_t, reflect_orig, depth - 1);
+        return local_color * (1.f - cl_obj.reflect) + reflected_color * cl_obj.reflect;
     }
     return glm::vec3(0.1f, 0.1f, 0.1f); // BCKG col
 }
@@ -183,10 +198,10 @@ void make_render(){
     int displacement = win.width;
 
     std::vector<Sphere> sphere_list{
-        Sphere(glm::vec3(0.f, 0.f,0.8f),  glm::vec3(1.f,0.0f,0.0f), 0.5f, 90),//R
-        Sphere(glm::vec3(1.f, 0.2f,1.2f), glm::vec3(0.0f,0.0f,1.f), 0.3f, 15),//B
-        Sphere(glm::vec3(0.f, 0.f,0.0f),   glm::vec3(1.f,1.f,0.f), 1.f, 10),
-        Sphere(glm::vec3(0.f, -0.9f,0.0f), glm::vec3(0.0f,1.f,0.0f), 0.5f, 50),//G
+        Sphere(glm::vec3(-1.7f, 0.f,0.8f),  glm::vec3(1.0f, 0.0f, 0.0f), 0.5f, 90, 0.4f),//R
+        Sphere(glm::vec3(0.0f, -0.9f,0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f, 50, 0.4f),//G
+        Sphere(glm::vec3(0.8f, 0.2f,1.2f),  glm::vec3(0.0f, 0.0f, 1.0f), 0.3f, 15, 0.4f),//B
+        Sphere(glm::vec3(0.0f, 0.f,0.0f),   glm::vec3(1.0f, 1.0f, 0.0f), 1.0f, 10, 0.4f),
     };
 
     std::vector<Light> light_list{
@@ -196,11 +211,12 @@ void make_render(){
 
     float min_t = 0;
     float max_t = 999999.0f;
+    int depth = 2;
 
     for (int j = 0; j < win.height; j++){
         for (int i = 0; i < win.width; i++){
             Ray ray ( O, ray_dir(i, j, win));//уже нормализованный
-            buffer[j * displacement + i] = beam_shot(ray, sphere_list, light_list, min_t, max_t, O);//ret col
+            buffer[j * displacement + i] = beam_shot(ray, sphere_list, light_list, min_t, max_t, O, depth);//ret col
         }
     }
     char name[] = "scene.bmp";
