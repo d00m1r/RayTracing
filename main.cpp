@@ -58,32 +58,6 @@ class Light
         float inten;
 };
 
-float light_intensity(const Ray& ray, const std::vector<Light>& light_list, const glm::vec3& p, const glm::vec3& n, int shine){
-    float inten = 0.1;
-    for(long unsigned int i = 0; i < light_list.size(); i++){
-        glm::vec3 l = light_list[i].pos - p;
-        glm::normalize(l);
-        
-        //Диффузия
-        float nl = dot(n, l);
-        if (nl > 0){
-            inten += light_list[i].inten * nl/(glm::length(n)*glm::length(l));//std::max(0.0f,nl);
-        }
-
-        //Зеркальность
-        if (shine != -1) {
-            glm::vec3 r = l-2.0f*n*dot(n, l);//СМЕНА ЗНАКА
-            float rv = dot(r, -ray.dir);
-            //inten += light_list[i].inten * pow(std::max(0.f, dot(r, l)), shine);
-            if (rv > 0){
-                inten += light_list[i].inten*pow(rv/(glm::length(r) * glm::length(-ray.dir)), shine);
-                //inten += light_list[i].inten * pow(glm::normalize(rv), shine);
-            }
-            //+= light_list[i].inten * pow(std::max(0.f, (ray.dir + n * 2.0f * ray.dir * n)*ray.dir), shine)
-        }
-    }
-    return inten; 
-}
 class Sphere{
     public:
         Sphere(){}
@@ -116,6 +90,53 @@ class Sphere{
         }
 };
 
+float light_intensity(const Ray& ray, const std::vector<Sphere>& sphere_list,
+ const std::vector<Light>& light_list, const glm::vec3& p, const glm::vec3& n, int shine, float max_t){
+    float inten = 0.1;
+    bool shadow_flag = false;
+
+    for(long unsigned int i = 0; i < light_list.size(); i++){
+
+        glm::vec3 l = light_list[i].pos - p;
+        Ray light(p, l);
+        glm::normalize(l);
+
+        //Тени
+        for(long unsigned int i = 0; i < sphere_list.size(); i++){
+            float sol = 0;
+            if(sphere_list[i].check_hit(light, 0.001, max_t, sol)){
+                shadow_flag = true;
+                break;
+            }
+        }
+        if (shadow_flag == true){
+            shadow_flag = false;
+            light.~Ray();
+            continue;
+        }
+
+        //Диффузия
+        float nl = dot(n, l);
+        if (nl > 0){
+            inten += light_list[i].inten * nl/(glm::length(n)*glm::length(l));//std::max(0.0f,nl);
+        }
+
+        //Зеркальность
+        if (shine != -1) {
+            glm::vec3 r = l-2.0f*n*dot(n, l);//СМЕНА ЗНАКА
+            float rv = dot(r, -ray.dir);
+            //inten += light_list[i].inten * pow(std::max(0.f, dot(r, l)), shine);
+            if (rv > 0){
+                inten += light_list[i].inten*pow(rv/(glm::length(r) * glm::length(-ray.dir)), shine);
+                //inten += light_list[i].inten * pow(glm::normalize(rv), shine);
+            }
+            //+= light_list[i].inten * pow(std::max(0.f, (ray.dir + n * 2.0f * ray.dir * n)*ray.dir), shine)
+        }
+        light.~Ray();
+    }
+    return inten; 
+}
+
 
 glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& sphere_list, const std::vector<Light>& light_list, float min_t, float max_t, const glm::vec3& O){
     for(long unsigned int i = 0; i < sphere_list.size(); i++){
@@ -125,7 +146,7 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& sphere_list, cons
             glm::vec3 n = p - sphere_list[i].center;//вычисление нормали сферы в точке пересечения
             //glm::normalize(n);
             n = n / glm::length(n);
-            return sphere_list[i].color * light_intensity(ray, light_list, p, n, sphere_list[i].shine);
+            return sphere_list[i].color * light_intensity(ray, sphere_list, light_list, p, n, sphere_list[i].shine, max_t);
         }
     }
     return glm::vec3(0.1f, 0.1f, 0.1f); // BCKG col
@@ -134,19 +155,19 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& sphere_list, cons
 void make_render(){
     Window win;
     std::vector<glm::vec3> buffer(win.width * win.height);
-    glm::vec3 O(0.0f, 0.0f, 3.0f);//камера
+    glm::vec3 O(0.0f, 0.0f, 7.0f);//камера
     int displacement = win.width;
 
     std::vector<Sphere> sphere_list{
-        Sphere (glm::vec3(0.2f, 0.3f,-10.0f), glm::vec3(1.f,1.f,0.f), 1.2f, 10),
-        Sphere (glm::vec3(-0.7f, 0.3f,-5.0f), glm::vec3(1.f,0.0f,0.0f), 0.5f, 90),
-        Sphere (glm::vec3(0.2f, -0.5f,-7.0f), glm::vec3(0.0f,1.f,0.0f), 0.7f, 50),
-        Sphere (glm::vec3(0.9f, 0.4f, -5.0f), glm::vec3(0.0f,0.0f,1.f), 0.3f, 50),
+        Sphere (glm::vec3(0.f, 0.f,-0.8f), glm::vec3(1.f,0.0f,0.0f), 0.5f, 90),//R
+        Sphere (glm::vec3(1.f, 0.2f,-1.2f), glm::vec3(0.0f,0.0f,1.f), 0.3f, 50),//B
+        Sphere (glm::vec3(0.f, 0.f,0.0f), glm::vec3(1.f,1.f,0.f), 1.f, 10),
+        Sphere (glm::vec3(0.f, -0.9f,0.0f), glm::vec3(0.0f,1.f,0.0f), 0.5f, 50),//G
     };
 
     std::vector<Light> light_list{
-        Light(glm::vec3(1.7f,-12.0f,-14.0f), glm::vec3(1.0f,1.0f,1.0f), 0.3f),
-        Light(glm::vec3(-9.1f,-13.0f,-18.0f), glm::vec3(1.0f,1.0f,1.0f), 0.4f)
+        Light(glm::vec3(14.7f,-12.0f,-14.0f), glm::vec3(1.0f,1.0f,1.0f), 0.3f),
+        Light(glm::vec3(17.1f,-10.0f,-32.0f), glm::vec3(1.0f,1.0f,1.0f), 0.4f)
     };
 
     float min_t = 0;
