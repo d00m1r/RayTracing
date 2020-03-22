@@ -38,6 +38,16 @@ class Ray{
         ~Ray(){};
         glm::vec3 start;
         glm::vec3 dir;
+
+    Ray& operator=(const Ray& right) {
+            //проверка на самоприсваивание
+            if (this == &right) {
+                return *this;
+            }
+            start = right.start;
+            dir = right.dir;
+            return *this;
+        }
 };
 
 glm::vec3 ray_dir(int i, int j, Window win){
@@ -163,11 +173,11 @@ float light_intensity(const Ray& ray, const std::vector<Sphere>& sphere_list,
     return inten; 
 }
 
-glm::vec3 reflect(const glm::vec3&dir, glm::vec3 n, const glm::vec3& O){
+glm::vec3 reflect(const glm::vec3&dir, glm::vec3 n){
     return dot(n, dir)*2.f*n - dir;
 }
 
-glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& sphere_list, const std::vector<Light>& light_list, float min_t, float max_t, const glm::vec3& O, int depth){
+glm::vec3 beam_shot( const Ray& ray, const std::vector<Sphere>& sphere_list, const std::vector<Light>& light_list, float min_t, float max_t, const glm::vec3& O, int depth){
     
     Sphere cl_obj;
     float cl_sol = determine_closest_object(ray, sphere_list, min_t, max_t, cl_obj);
@@ -176,19 +186,20 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& sphere_list, cons
         glm::vec3 n = p - cl_obj.center;//вычисление нормали сферы в точке пересечения
         //glm::normalize(n);
         n = n / glm::length(n);
-
-        glm::vec3 local_color =  cl_obj.color * light_intensity(ray, sphere_list, light_list, p, n, cl_obj.shine, max_t);
+        //ray.dir = -ray.dir;
+        float light_in =light_intensity(ray, sphere_list, light_list, p, n, cl_obj.shine, max_t);
+        glm::vec3 local_color =  cl_obj.color * light_in;
         if(depth < 1 || cl_obj.reflect < 0){
-            return local_color;
+            return local_color ;
         }
-
-        glm::vec3 reflect_dir = reflect(ray.dir, n);
+        //ray.dir = -ray.dir;
+        glm::vec3 reflect_dir = reflect(-ray.dir, n);
         glm::vec3 reflect_orig = dot(reflect_dir, n) < 0.f ? p - n * 0.001f : p + n * 0.001f;
         Ray ref_ray(reflect_orig, reflect_dir);
-        glm::vec3 reflected_color = beam_shot(ref_ray, sphere_list, light_list, min_t, max_t, reflect_orig, depth - 1);
+        glm::vec3 reflected_color = beam_shot(ref_ray, sphere_list, light_list, 0.001, max_t, reflect_orig, depth - 1);
         return local_color * (1.f - cl_obj.reflect) + reflected_color * cl_obj.reflect;
     }
-    return glm::vec3(0.1f, 0.1f, 0.1f); // BCKG col
+    return glm::vec3(0.0f, 0.0f, 0.0f); // BCKG col
 }
 
 void make_render(){
@@ -198,15 +209,15 @@ void make_render(){
     int displacement = win.width;
 
     std::vector<Sphere> sphere_list{
-        Sphere(glm::vec3(-1.7f, 0.f,0.8f),  glm::vec3(1.0f, 0.0f, 0.0f), 0.5f, 90, 0.4f),//R
-        Sphere(glm::vec3(0.0f, -0.9f,0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f, 50, 0.4f),//G
-        Sphere(glm::vec3(0.8f, 0.2f,1.2f),  glm::vec3(0.0f, 0.0f, 1.0f), 0.3f, 15, 0.4f),//B
-        Sphere(glm::vec3(0.0f, 0.f,0.0f),   glm::vec3(1.0f, 1.0f, 0.0f), 1.0f, 10, 0.4f),
+        Sphere(glm::vec3(-1.7f, 0.f,0.8f),  glm::vec3(1.0f, 0.0f, 0.0f), 0.5f, 50,  0.3f),//R
+        Sphere(glm::vec3(0.0f, -0.9f,0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f, 150, 0.3f),//G
+        Sphere(glm::vec3(0.8f, 0.2f,1.2f),  glm::vec3(0.0f, 0.0f, 1.0f), 0.3f, 100, 0.3f),//B
+        Sphere(glm::vec3(0.0f, 0.f,0.0f),   glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 20, 0.2f),
     };
 
     std::vector<Light> light_list{
-        Light(glm::vec3(14.7f,-6.0f,7.0f),   glm::vec3(1.0f,1.0f,1.0f), 0.3f),
-        Light(glm::vec3(17.1f,-10.0f,32.0f), glm::vec3(1.0f,1.0f,1.0f), 0.4f)
+        Light(glm::vec3(14.7f,-12.0f,14.0f),   glm::vec3(1.0f,1.0f,1.0f), 0.5f),
+        Light(glm::vec3(17.1f,-20.0f,64.0f), glm::vec3(1.0f,1.0f,1.0f), 0.5f)
     };
 
     float min_t = 0;
