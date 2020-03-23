@@ -10,7 +10,7 @@
 
 class Sphere{
     public:
-        Sphere(){}
+        Sphere(){};
         Sphere(const glm::vec3& cen, const glm::vec3& col, float rad, int sh, float reflective): center(cen), color(col), radius(rad), shine(sh), reflect(reflective){};
 
         glm::vec3 center;

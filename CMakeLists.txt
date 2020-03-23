@@ -3,9 +3,10 @@ cmake_minimum_required (VERSION 3.8)
 set (PROJECT rt)
 set (SOURCE_EXE main.cpp)
 set (HEADERS BMP/EasyBMP.h
-            object.hpp
+            window.hpp
             ray.hpp
-            window.hpp)
+            effects.hpp
+            object.hpp)
 include_directories(
 	glm-0.9.7.1/
     BMP/
