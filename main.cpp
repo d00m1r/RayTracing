@@ -3,61 +3,39 @@
 #include <vector>
 
 #include <glm/glm.hpp>
+#include <glm/mat3x3.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtc/random.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp> 
+#include <glm/gtx/transform.hpp>
 
-#include "BMP/EasyBMP.h"
-#include "BMP/EasyBMP.cpp"
-
-struct Window{
-    const int width = 1024;
-    const int height = 768;
-    const float fov = glm::pi<float>()/3;
-};
-
-void save_image(Window win, std::vector<glm::vec3> buffer, char* name){
-	BMP image;
-	image.SetSize(win.width, win.height);
-	int displacement = 0;
-	for (int j = 0; j < win.height; j++){
-		for (int i = 0; i < win.width; i++){
-			glm::vec3 color = buffer[displacement + i];
-			image(i,j)->Red  =glm::clamp(color.x, 0.0f, 1.0f) * 255.0f;
-			image(i,j)->Green=glm::clamp(color.y, 0.0f, 1.0f) * 255.0f;
-			image(i,j)->Blue =glm::clamp(color.z, 0.0f, 1.0f) * 255.0f;
-		}
-		displacement += win.width;
-	}
-	image.WriteToFile(name);
-}
-
-class Ray{
+#include "object.hpp"
+#include "ray.hpp"
+#include "window.hpp"
+/*class camera {
     public:
-        Ray(const glm::vec3& orig, const glm::vec3& direction): start(orig), dir(direction){};
-        ~Ray(){};
-        glm::vec3 start;
-        glm::vec3 dir;
-
-    Ray& operator=(const Ray& right) {
-            //проверка на самоприсваивание
-            if (this == &right) {
-                return *this;
-            }
-            start = right.start;
-            dir = right.dir;
-            return *this;
+        camera(vec3 lookfrom, vec3 lookat, vec3 vup, float vfov, float aspect) {
+            // vfov is top to bottom in degrees
+            vec3 u, v, w;
+            float theta = vfov*M_PI/180;
+            float half_height = tan(theta/2);
+            float half_width = aspect * half_height;
+            origin = lookfrom;
+            w = unit_vector(lookfrom - lookat);
+            u = unit_vector(cross(vup, w));
+            v = cross(w, u);
+            lower_left_corner = origin - half_width*u - half_height*v - w;
+            horizontal = 2*half_width*u;
+            vertical = 2*half_height*v;
         }
-};
 
-glm::vec3 ray_dir(int i, int j, Window win){
-    glm::vec3 dir;
-    dir.x =  (i + 0.5f) -  (win.width/2.0f);
-    dir.y = (j + 0.5f) - (win.height/2.0f);
-    dir.z = -(win.width)/tan(win.fov/2.0f);
-    return glm::normalize(dir);
-}
+        ray get_ray(float s, float t) {
+            return ray(origin,
+                       lower_left_corner + s*horizontal + t*vertical - origin);
+        }
 
+};*/
 
 class Light{
     public:
@@ -67,65 +45,6 @@ class Light{
         glm::vec3 pos;
         float inten;
 };
-
-class Sphere{
-    public:
-        Sphere(){}
-        Sphere(const glm::vec3& cen, const glm::vec3& col, float rad, int sh, float reflective): center(cen), color(col), radius(rad), shine(sh), reflect(reflective){};
-
-        glm::vec3 center;
-        glm::vec3 color;
-        float radius;
-        int shine;
-        float reflect;
-
-        Sphere& operator=(const Sphere& right) {
-            //проверка на самоприсваивание
-            if (this == &right) {
-                return *this;
-            }
-            radius  = right.radius;
-            shine   = right.shine;
-            reflect = right.reflect;
-            center  = right.center;
-            color   = right.color;
-            return *this;
-        }
-
-        void calc_hit(const Ray& ray, float* sol_arr)const{
-
-            glm::vec3 oc = ray.start - center;
-            float a = dot(ray.dir, ray.dir);//ОПТИМИЗИРОВАТЬ
-            float b = dot(oc, ray.dir)*2;
-            float c = dot(oc, oc) - radius*radius;
-            float D = b*b - 4*a*c;
-
-            if (D > 0){
-                sol_arr[0] = (-b + sqrt(D))/(2*a);
-                sol_arr[1] = (-b - sqrt(D))/(2*a);
-                return;
-            }
-            sol_arr[0] = sol_arr[1] = 0.f;
-        }
-};
-
-float determine_closest_object(const Ray& ray, const std::vector<Sphere>& sphere_list, float min_t, float max_t, Sphere& cl_obj){
-    float cl_sol = max_t;
-    for(long unsigned int i = 0; i < sphere_list.size(); i++){
-        float sol_arr[2];
-        sphere_list[i].calc_hit(ray, sol_arr);
-        if (sol_arr[0] > min_t && sol_arr[0] < max_t && sol_arr[0] < cl_sol){
-            cl_sol = sol_arr[0];
-            cl_obj = sphere_list[i];
-        }
-        if (sol_arr[1] > min_t && sol_arr[1] < max_t && sol_arr[1] < cl_sol){
-            cl_sol = sol_arr[1];
-            cl_obj = sphere_list[i];
-        }
-    }
-    return cl_sol;
-
-}
 
 float light_intensity(const Ray& ray, const std::vector<Sphere>& sphere_list,
  const std::vector<Light>& light_list, const glm::vec3& p, const glm::vec3& n, int shine, float max_t){
@@ -184,19 +103,19 @@ glm::vec3 beam_shot( const Ray& ray, const std::vector<Sphere>& sphere_list, con
     if (cl_sol != max_t){
         glm::vec3 p = O + cl_sol*ray.dir;//вычисление пересечения
         glm::vec3 n = p - cl_obj.center;//вычисление нормали сферы в точке пересечения
-        //glm::normalize(n);
         n = n / glm::length(n);
-        //ray.dir = -ray.dir;
         float light_in =light_intensity(ray, sphere_list, light_list, p, n, cl_obj.shine, max_t);
         glm::vec3 local_color =  cl_obj.color * light_in;
+        
         if(depth < 1 || cl_obj.reflect < 0){
             return local_color ;
         }
         //ray.dir = -ray.dir;
         glm::vec3 reflect_dir = reflect(-ray.dir, n);
-        glm::vec3 reflect_orig = dot(reflect_dir, n) < 0.f ? p - n * 0.001f : p + n * 0.001f;
-        Ray ref_ray(reflect_orig, reflect_dir);
-        glm::vec3 reflected_color = beam_shot(ref_ray, sphere_list, light_list, 0.001, max_t, reflect_orig, depth - 1);
+        //glm::vec3 reflect_orig = dot(reflect_dir, n) < 0.f ? p - n * 0.001f : p + n * 0.001f;
+        Ray ref_ray(p, reflect_dir);
+        glm::vec3 reflected_color = beam_shot(ref_ray, sphere_list, light_list, 0.001, max_t, p, depth - 1);
+        
         return local_color * (1.f - cl_obj.reflect) + reflected_color * cl_obj.reflect;
     }
     return glm::vec3(0.0f, 0.0f, 0.0f); // BCKG col
@@ -205,7 +124,6 @@ glm::vec3 beam_shot( const Ray& ray, const std::vector<Sphere>& sphere_list, con
 void make_render(){
     Window win;
     std::vector<glm::vec3> buffer(win.width * win.height);
-    glm::vec3 O(0.0f, 0.0f, 7.0f);//камера
     int displacement = win.width;
 
     std::vector<Sphere> sphere_list{
@@ -224,10 +142,20 @@ void make_render(){
     float max_t = 999999.0f;
     int depth = 2;
 
+    glm::vec3 O1(0.0f, 0.0f, 7.0f);//прямо по Z
+    glm::vec3 O2(0.0f, 0.0f, -7.0f);//сзади
+    glm::vec3 O3(0.0f, -7.0f, 0.0f);//сверху
+
+    glm::mat3 rotz(-1.f, 0.f, 0.f, 0.f, -1.f, 0.f, 0.f, 0.f, 1.f);//Z 180
+    glm::mat3 roty(-1.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, -1.f);//Y 180
+    glm::mat3 rotx(1.f, 0.f, 0.f, 0.f, 0.f, -1.f, 0.f, 1.f, 0.f);//X 90
+
+
+
     for (int j = 0; j < win.height; j++){
         for (int i = 0; i < win.width; i++){
-            Ray ray ( O, ray_dir(i, j, win));//уже нормализованный
-            buffer[j * displacement + i] = beam_shot(ray, sphere_list, light_list, min_t, max_t, O, depth);//ret col
+            Ray ray ( O3, rotz*rotx * ray_dir(i, j, win));//уже нормализованный
+            buffer[j * displacement + i] = beam_shot(ray, sphere_list, light_list, min_t, max_t, O3, depth);//ret col
         }
     }
     char name[] = "scene.bmp";
