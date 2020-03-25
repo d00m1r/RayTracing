@@ -749,6 +749,8 @@ ray.hpp
 /home/d/projects/rt/ray.hpp
 object.hpp
 /home/d/projects/rt/object.hpp
+material.hpp
+/home/d/projects/rt/material.hpp
 
 /home/d/projects/rt/main.cpp
 iostream
@@ -773,6 +775,24 @@ effects.hpp
 /home/d/projects/rt/effects.hpp
 object.hpp
 /home/d/projects/rt/object.hpp
+material.hpp
+/home/d/projects/rt/material.hpp
+
+/home/d/projects/rt/material.hpp
+iostream
+-
+vector
+-
+glm/glm.hpp
+-
+glm/mat3x3.hpp
+-
+glm/vec3.hpp
+-
+glm/gtc/constants.hpp
+-
+ray.hpp
+/home/d/projects/rt/ray.hpp
 
 /home/d/projects/rt/object.hpp
 iostream
@@ -785,6 +805,8 @@ vector
 -
 ray.hpp
 /home/d/projects/rt/ray.hpp
+material.hpp
+/home/d/projects/rt/material.hpp
 
 /home/d/projects/rt/ray.hpp
 iostream

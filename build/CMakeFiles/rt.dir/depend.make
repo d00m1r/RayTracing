@@ -95,6 +95,7 @@ CMakeFiles/rt.dir/main.cpp.o: ../BMP/EasyBMP_DataStructures.h
 CMakeFiles/rt.dir/main.cpp.o: ../BMP/EasyBMP_VariousBMPutilities.h
 CMakeFiles/rt.dir/main.cpp.o: ../effects.hpp
 CMakeFiles/rt.dir/main.cpp.o: ../main.cpp
+CMakeFiles/rt.dir/main.cpp.o: ../material.hpp
 CMakeFiles/rt.dir/main.cpp.o: ../object.hpp
 CMakeFiles/rt.dir/main.cpp.o: ../ray.hpp
 CMakeFiles/rt.dir/main.cpp.o: ../window.hpp
