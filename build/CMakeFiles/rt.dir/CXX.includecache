@@ -743,6 +743,8 @@ glm/gtc/matrix_transform.hpp
 -
 glm/gtx/transform.hpp
 -
+glm/trigonometric.hpp
+-
 window.hpp
 /home/d/projects/rt/window.hpp
 ray.hpp

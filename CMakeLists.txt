@@ -6,6 +6,7 @@ set (HEADERS BMP/EasyBMP.h
             window.hpp
             ray.hpp
             effects.hpp
+            material.hpp
             object.hpp)
 include_directories(
 	glm-0.9.7.1/
