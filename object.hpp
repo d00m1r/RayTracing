@@ -9,14 +9,25 @@
 #include "ray.hpp"
 #include "material.hpp"
 
-class Sphere{
+class Object{
     public:
-        Sphere(){};
-        Sphere(const glm::vec3& cen, const glm::vec3& col, float rad, const Material &material): center(cen), radius(rad), mat(material){mat.color = col;};
-
+        Material mat;
         glm::vec3 center;
+        Object(){};
+        Object(const glm::vec3& col, const Material &material, glm::vec3 cen): mat(material), center(cen){mat.color = col;};
+
+        virtual void calc_hit(const Ray& ray, float* sol_arr)const{};
+};
+
+class Sphere {
+    public:
         float radius;
         Material mat;
+        glm::vec3 center;
+
+        Sphere(){};
+        //Sphere(const glm::vec3& cen, const glm::vec3& col, float rad, const Material &material): Object(col, material, center), radius(rad){};
+        Sphere(const glm::vec3& cen, const glm::vec3& col, float rad, const Material &material): radius(rad), mat(material), center(cen){mat.color = col;};
 
         Sphere& operator=(const Sphere& right) {
             //проверка на самоприсваивание
@@ -30,8 +41,7 @@ class Sphere{
             return *this;
         }
 
-        void calc_hit(const Ray& ray, float* sol_arr)const{
-
+        virtual void calc_hit(const Ray& ray, float* sol_arr)const{
             glm::vec3 oc = ray.start - center;
             float a = dot(ray.dir, ray.dir);//ОПТИМИЗИРОВАТЬ
             float b = dot(oc, ray.dir)*2;
@@ -47,22 +57,41 @@ class Sphere{
         }
 };
 
-float determine_closest_object(const Ray& ray, const std::vector<Sphere>& sphere_list, float min_t, float max_t, Sphere& cl_obj){
-    float cl_sol = max_t;
-    for(long unsigned int i = 0; i < sphere_list.size(); i++){
+/*
+class Plane : public Object{
+    public:
+        Material mat;
+        static glm::vec3 n(0.f,1.f,0.f);
+        const float d = 2.f;
+
+        Plane(){};
+        Plane(const glm::vec3& col, const Material &material): mat(material){mat.color = col;};
+
+        virtual void calc_hit(const Ray& ray, float* sol_arr)const{
+            float e = 0.0001;
+            sol_arr[0] = sol_arr[1] = 0.f;
+
+            if(dot(ray.dir, n) >= e && dot(ray.dir, n) <= -e){
+                sol_arr[0] = sol_arr[1] = -(d + dot(ray.start, n)) / dot(ray.dir, n);
+            }
+        }
+};
+*/
+Sphere determine_closest_object(const Ray& ray, const std::vector<Sphere>& obj_list, float min_t, float max_t, float& cl_sol){
+    Sphere cl_obj;
+    for(long unsigned int i = 0; i < obj_list.size(); i++){
         float sol_arr[2];
-        sphere_list[i].calc_hit(ray, sol_arr);
+        obj_list[i].calc_hit(ray, sol_arr);
         if (sol_arr[0] > min_t && sol_arr[0] < max_t && sol_arr[0] < cl_sol){
             cl_sol = sol_arr[0];
-            cl_obj = sphere_list[i];
+            cl_obj = obj_list[i];//!downcast
         }
         if (sol_arr[1] > min_t && sol_arr[1] < max_t && sol_arr[1] < cl_sol){
             cl_sol = sol_arr[1];
-            cl_obj = sphere_list[i];
+            cl_obj = obj_list[i];//!downcast
         }
     }
-    return cl_sol;
-
+    return cl_obj;
 }
 /*
 class Model{
