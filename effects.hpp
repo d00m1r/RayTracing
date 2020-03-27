@@ -39,21 +39,25 @@ glm::vec3 reflect(const glm::vec3&dir, glm::vec3 n){
     return dot(n, dir)*2.f*n - dir;
 }//dir - ...
 
-glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& obj_list, const std::vector<Light>& light_list, Window win, const glm::vec3& O, int depth, BMP& img){
+glm::vec3 beam_shot(const Ray& ray, const std::vector<Object*>& obj_list, const std::vector<Light>& light_list, Window win, const glm::vec3& O, int depth, BMP& img){
     
     float cl_sol = win.max_t;
-    Sphere cl_obj = determine_closest_object(ray, obj_list, win.min_t, win.max_t, cl_sol);
+    Object* cl_obj = determine_closest_object(ray, obj_list, win.min_t, win.max_t, cl_sol);
+    Sphere sphere;
     if (cl_sol < win.max_t){
-        glm::vec3 p = O + cl_sol * ray.dir;//вычисление пересечения
-        glm::vec3 n = p - cl_obj.center;//вычисление нормали сферы в точке пересечения
+        glm::vec3 point = O + cl_sol * ray.dir;//вычисление пересечения
+        glm::vec3 n = cl_obj->norm;//берём за нормаль (0,1,0) для плоскости
+        if (sphere == cl_obj){//если объект не плоскоть, меняем нормаль
+            n = point - cl_obj->center;//вычисление нормали сферы в точке пересечения
+        }
         n = n / glm::length(n);
 
         float diff = 0.f, shine = 0.f;
         bool shadow_flag = false;
 
         for(long unsigned int i = 0; i < light_list.size(); i++){
-            glm::vec3 l = light_list[i].pos - p;
-            Ray light(p, l);
+            glm::vec3 l = light_list[i].pos - point;
+            Ray light(point, l);//инициализация луча света
             glm::normalize(l);
 
             //Тени
@@ -65,13 +69,13 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& obj_list, const s
                     break;
                 }
             }
-            if (shadow_flag == true and cl_obj.mat.reflect < 0.8){
+            if (shadow_flag == true and cl_obj->mat.reflect < 0.8){
                 shadow_flag = false;
                 continue;
             }
 
             //Диффузия
-            if(cl_obj.mat.features[0] > 0){
+            if(cl_obj->mat.features[0] > 0){
                 float nl = dot(n, l);
                 if (nl > 0){
                     diff += light_list[i].inten * nl/(glm::length(n)*glm::length(l));
@@ -79,38 +83,38 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Sphere>& obj_list, const s
             }
 
             //Сияние
-            if (cl_obj.mat.features[3] > 0) {
+            if (cl_obj->mat.features[3] > 0) {
                 glm::vec3 r = reflect(l, n);
                 float rv = dot(r, -ray.dir);
                 if (rv > 0){
-                    shine += light_list[i].inten*pow(rv/(glm::length(r) * glm::length(-ray.dir)), cl_obj.mat.shine);
-                    //shine += light_list[i].inten * pow(std::max(0.f, dot(-reflect(-l, n), -ray.dir)), cl_obj.mat.shine);
+                    shine += light_list[i].inten*pow(rv/(glm::length(r) * glm::length(-ray.dir)), cl_obj->mat.shine);
+                    //shine += light_list[i].inten * pow(std::max(0.f, dot(-reflect(-l, n), -ray.dir)), cl_obj->mat.shine);
                 }
             }
         }
         
         if(depth < 1){
-            return cl_obj.mat.color;
+            return cl_obj->mat.color;
         }
 
         //Отражение
         glm::vec3 reflect_color (0.f,0.f,0.f);
-        if (cl_obj.mat.features[1]){
+        if (cl_obj->mat.features[1]){
             glm::vec3 reflect_dir = glm::normalize(reflect(-ray.dir, n));
-            Ray reflect_ray(p, reflect_dir);
-            reflect_color = beam_shot(reflect_ray, obj_list, light_list, win, p, depth - 1, img);
+            Ray reflect_ray(point, reflect_dir);
+            reflect_color = beam_shot(reflect_ray, obj_list, light_list, win, point, depth - 1, img);
         }
 
         //Преломление
         glm::vec3 refract_color (0.f,0.f,0.f);
-        if (cl_obj.mat.features[2] > 0){   
-            glm::vec3 refract_dir = glm::normalize(refract(ray.dir, n, cl_obj.mat.refract));
-            Ray refract_ray(p, refract_dir);
-            refract_color = beam_shot(refract_ray, obj_list, light_list, win, p, depth - 1, img);
+        if (cl_obj->mat.features[2] > 0){   
+            glm::vec3 refract_dir = glm::normalize(refract(ray.dir, n, cl_obj->mat.refract));
+            Ray refract_ray(point, refract_dir);
+            refract_color = beam_shot(refract_ray, obj_list, light_list, win, point, depth - 1, img);
         }
 
-        return /*(1.f - cl_obj.mat.reflect) */cl_obj.mat.color * cl_obj.mat.features[0] * diff 
-        + reflect_color * cl_obj.mat.reflect
+        return /*(1.f - cl_obj->mat.reflect) */cl_obj->mat.color * cl_obj->mat.features[0] * diff 
+        + reflect_color * cl_obj->mat.reflect
         + refract_color 
         + glm::vec3(1.f,1.f,1.f) * shine;
     }

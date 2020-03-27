@@ -18,12 +18,12 @@ void make_render(){
     std::vector<glm::vec3> buffer(win.width * win.height);
     int displacement = win.width;
     
-    std::vector<Sphere> obj_list{
-        Sphere(glm::vec3(0.0f, 4.f,-1.f),  glm::vec3(1.0f, 0.0f, 0.0f), 3.f, matte),//R
-        Sphere(glm::vec3(0.0f, 0.f,-0.5f),   glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glass),
-        Sphere(glm::vec3(0.4f, -1.f,0.9f), glm::vec3(0.0f, 0.0f, 0.0f), 0.5f, mirror),//G
-        Sphere(glm::vec3(0.8f, 0.2f,1.5f),  glm::vec3(0.2f, 0.2f, 0.2f), 0.3f, metal),
-        //Plane(glm::vec3(0.2f, 0.2f, 0.2f), metal),
+    std::vector<Object*> obj_list{//дин массив указателей на объекты
+        new Sphere(glm::vec3(0.0f, 4.f,-1.f),  glm::vec3(1.0f, 0.0f, 0.0f), 3.f, matte),//R
+        new Sphere(glm::vec3(0.0f, 0.f,-0.5f),   glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glass),
+        new Sphere(glm::vec3(0.4f, -1.f,0.9f), glm::vec3(0.0f, 0.0f, 0.0f), 0.5f, mirror),//G
+        new Sphere(glm::vec3(0.8f, 0.2f,1.5f),  glm::vec3(0.2f, 0.2f, 0.2f), 0.3f, metal),
+        new Plane(glm::vec3(0.2f, 0.2f, 0.2f), metal),
     };                                                                   //rad shine reflective
 
     std::vector<Light> light_list{

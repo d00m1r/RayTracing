@@ -13,21 +13,26 @@ class Object{
     public:
         Material mat;
         glm::vec3 center;
+        glm::vec3 norm;
+
         Object(){};
-        Object(const glm::vec3& col, const Material &material, glm::vec3 cen): mat(material), center(cen){mat.color = col;};
+        Object(const glm::vec3& col, const Material &material): mat(material){
+            mat.color = col;
+            center = glm::vec3 (0.f,0.f,0.f);
+            norm = glm::vec3 (0.f,1.f,0.f);};
+        Object(const glm::vec3& col, const Material &material, const glm::vec3& cen): mat(material), center(cen){
+            mat.color = col;
+            norm = glm::vec3 (0.f,1.f,0.f);};
 
         virtual void calc_hit(const Ray& ray, float* sol_arr)const{};
 };
 
-class Sphere {
+class Sphere : public Object{
     public:
         float radius;
-        Material mat;
-        glm::vec3 center;
-
         Sphere(){};
         //Sphere(const glm::vec3& cen, const glm::vec3& col, float rad, const Material &material): Object(col, material, center), radius(rad){};
-        Sphere(const glm::vec3& cen, const glm::vec3& col, float rad, const Material &material): radius(rad), mat(material), center(cen){mat.color = col;};
+        Sphere(const glm::vec3& cen, const glm::vec3& col, float rad, const Material &material): Object(col, material, cen), radius(rad){};
 
         Sphere& operator=(const Sphere& right) {
             //проверка на самоприсваивание
@@ -55,40 +60,45 @@ class Sphere {
             }
             sol_arr[0] = sol_arr[1] = 0.f;
         }
+
+        int operator==(Object*) {
+            return 1;
+        }
 };
 
-/*
+
 class Plane : public Object{
     public:
-        Material mat;
-        static glm::vec3 n(0.f,1.f,0.f);
-        const float d = 2.f;
-
+        float d;
         Plane(){};
-        Plane(const glm::vec3& col, const Material &material): mat(material){mat.color = col;};
+        Plane(const glm::vec3& col, const Material &material): Object(col, mat), d(2.f){};
 
         virtual void calc_hit(const Ray& ray, float* sol_arr)const{
             float e = 0.0001;
             sol_arr[0] = sol_arr[1] = 0.f;
 
-            if(dot(ray.dir, n) >= e && dot(ray.dir, n) <= -e){
-                sol_arr[0] = sol_arr[1] = -(d + dot(ray.start, n)) / dot(ray.dir, n);
+            if(dot(ray.dir, norm) >= e && dot(ray.dir, norm) <= -e){
+                sol_arr[0] = sol_arr[1] = -(d + dot(ray.start, norm)) / dot(ray.dir, norm);
             }
         }
+        
+        int operator==(Object*) {
+            return 0;
+        }
 };
-*/
-Sphere determine_closest_object(const Ray& ray, const std::vector<Sphere>& obj_list, float min_t, float max_t, float& cl_sol){
-    Sphere cl_obj;
+
+Object* determine_closest_object(const Ray& ray, const std::vector<Object*>& obj_list, float min_t, float max_t, float& cl_sol){
+    Object* cl_obj;
     for(long unsigned int i = 0; i < obj_list.size(); i++){
         float sol_arr[2];
-        obj_list[i].calc_hit(ray, sol_arr);
+        obj_list[i]->calc_hit(ray, sol_arr);
         if (sol_arr[0] > min_t && sol_arr[0] < max_t && sol_arr[0] < cl_sol){
             cl_sol = sol_arr[0];
-            cl_obj = obj_list[i];//!downcast
+            cl_obj = (Object*)obj_list[i];//!downcast
         }
         if (sol_arr[1] > min_t && sol_arr[1] < max_t && sol_arr[1] < cl_sol){
             cl_sol = sol_arr[1];
-            cl_obj = obj_list[i];//!downcast
+            cl_obj = (Object*)obj_list[i];//!downcast
         }
     }
     return cl_obj;
