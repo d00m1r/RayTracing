@@ -817,6 +817,8 @@ ray.hpp
 /home/d/projects/rt/ray.hpp
 material.hpp
 /home/d/projects/rt/material.hpp
+window.hpp
+/home/d/projects/rt/window.hpp
 
 /home/d/projects/rt/ray.hpp
 iostream

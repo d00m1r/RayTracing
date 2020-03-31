@@ -16,6 +16,7 @@ struct Window{
 	float min_t = 0.001;
     float max_t = 99999999.0f;
     int depth = 6;
+	float inf = 150.f;
 
 };
 

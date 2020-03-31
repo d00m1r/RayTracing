@@ -44,8 +44,9 @@ void make_render(){
         new Sphere(glm::vec3(0.2f, 0.2f, 0.2f), metal , glm::vec3(0.8f, 0.2f,1.5f), 0.3f),
         new Triangle(glm::vec3(1.0f, 0.0f, 0.0f), mirror , tr),
         new Sphere(glm::vec3(0.2f, 0.2f, 0.2f), metal , glm::vec3(1.1f, 3.4f,3.7f), 0.2f),
-        //new Plane(glm::vec3(0.2f, 0.2f, 0.2f), metal),
-        //new Model(glm::vec3(1.0f, 0.0f, 0.0f), 3.f, matte, "/home/d/projects/rt/duck.obj"),
+        //Plane
+        new Triangle(glm::vec3(0.0f, 1.0f, 0.0f), matte , std::vector<glm::vec3> {glm::vec3(-win.inf, 4.0f ,win.inf),  glm::vec3(win.inf, 4.0f ,-win.inf), glm::vec3(-win.inf,4.0f ,-win.inf)}),
+        new Triangle(glm::vec3(0.0f, 1.0f, 0.0f), matte , std::vector<glm::vec3> {glm::vec3(-win.inf, 4.0f ,win.inf), glm::vec3(win.inf, 4.0f , win.inf), glm::vec3( win.inf ,4.0f,-win.inf)}),
     };     
 
     std::vector<Light> light_list{
@@ -53,7 +54,7 @@ void make_render(){
         Light(glm::vec3(17.1f,-20.0f,64.0f), glm::vec3(1.0f,1.0f,1.0f),   0.5f)
     };
 
-    glm::vec3 O1(0.0f, -0.6f, 25.0f);//прямо по Z
+    glm::vec3 O1(0.0f, -0.6f, 15.0f);//прямо по Z
     BMP img;
     img.ReadFromFile("space1.bmp");
 
