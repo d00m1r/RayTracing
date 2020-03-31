@@ -77,55 +77,37 @@ class Triangle:public Object{
         glm::vec3 edge2;
 
         Triangle(const glm::vec3& col, const Material &material, const std::vector<glm::vec3>& point_list): Object(col, material), pl(point_list){
-            //set_normal();
+            set_normal();
             type = "triangle";
         };
 
         void set_normal(){
-            edge1 = pl[1] - pl[0];
-            edge2 = pl[2] - pl[0];
-            norm = glm::cross(edge1, edge2);
+            edge2 = pl[1] - pl[0];
+            edge1 = pl[2] - pl[0];
+            norm = cross(edge1, edge2);
             norm = norm / glm::length(norm);
         }
 
         virtual void calc_hit(const Ray& ray, float* sol_arr){// Möller-Trumbore
-            /*edge1 = pl[1] - pl[0];
-            edge2 = pl[2] - pl[0];
-            glm::vec3 T = p - v[0];
-            glm::vec3 P = glm::cross(D, edge2);
-            glm::vec3 Q = glm::cross(T, edge1);
-            glm::vec3 D = ray.dir;
-            
-            sol_arr[0] = sol_arr[1] = (1 - u - v)
-            */
-            edge1 = pl[1] - pl[0];
-            edge2 = pl[2] - pl[0];
-            // Вычисление вектора нормали к плоскости
-            glm::vec3 pvec = cross(ray.dir, edge2);
-            //norm = cross(edge1, edge2);
-            norm = pvec;
-            norm = norm / glm::length(norm);
-            float det = dot(edge1, pvec);
+
+            glm::vec3 T = ray.start - pl[0];
+            glm::vec3 P = cross(ray.dir, edge2);
+            glm::vec3 Q = cross(T, edge1);
+            float k = dot(P, edge1);
+            float ik = 1 / k;
+
             bool flag = true;
             sol_arr[0] = sol_arr[1] = 0.f;
             // Луч параллелен плоскости
-            if (det < 1e-8 && det > -1e-8) {
-                flag = false;
-            }
+            if (k < 1e-8 && k > -1e-8) {flag = false;}
 
-            float inv_det = 1 / det;
-            glm::vec3 tvec = ray.start - pl[0];
-            float u = dot(tvec, pvec) * inv_det;
-            if (u < 0 || u > 1) {
-                flag = false;
-            }
+            float u = ik * dot(P, T);
+            if (u < 0 || u > 1) {flag = false;}
 
-            glm::vec3 qvec = cross(tvec, edge1);
-            float v = dot(ray.dir, qvec) * inv_det;
-            if (v < 0 || u + v > 1) {
-                flag = false;
-            }
-            if(flag){sol_arr[0] = sol_arr[1] = dot(edge2, qvec) * inv_det;}
+            float v = ik * dot(ray.dir, Q);
+            if (v < 0 || u + v > 1) {flag = false;}
+
+            if(flag){sol_arr[0] = sol_arr[1] = ik * dot(Q, edge2);}
             
         }
 };
@@ -279,16 +261,16 @@ class Model: public Object{
                 glm::vec3 edge1 = point(vert(fi,1)) - point(vert(fi,0));
                 glm::vec3 edge2 = point(vert(fi,2)) - point(vert(fi,0));
                 glm::vec3 norm = glm::cross(ray.dir, edge2);
-                float det = dot(edge1, norm);
-                if (det > 1e-5){
+                float k = dot(edge1, norm);
+                if (k > 1e-5){
                     glm::vec3 tmp = ray.start - point(vert(fi,0));
 
                     float t1 = dot(tmp, norm);
-                    if (t1 > 0 && t1 < det){
+                    if (t1 > 0 && t1 < k){
                         glm::vec3 tmp2 = cross(tmp, edge1);
                         float t2 = dot(ray.dir, tmp2);
-                        if (t2 > 0 && t1 + t2 < det){
-                            sol_arr[0] = sol_arr[1] = dot(edge2, tmp2) *float(1./det);
+                        if (t2 > 0 && t1 + t2 < k){
+                            sol_arr[0] = sol_arr[1] = dot(edge2, tmp2) *float(1./k);
                         }
                     }
                 }

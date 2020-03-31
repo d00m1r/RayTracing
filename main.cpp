@@ -38,12 +38,12 @@ void make_render(){
     std::vector<glm::vec3> tr {glm::vec3(0.0f, 4.f ,4.3f), glm::vec3(2.0f, 4.f ,4.3f), glm::vec3(2.0f, 3.f ,1.f)};
 
     std::vector<Object*> obj_list{//дин массив указателей на объекты
-        new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), mirror , glm::vec3(0.0f, 4.f ,-1.f), 3.0f),//R
+        new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), matte , glm::vec3(0.0f, 4.f ,-1.f), 3.0f),//R
         new Sphere(glm::vec3(1.0f, 1.0f, 1.0f), glass , glm::vec3(0.0f, 0.f,-0.5f), 1.0f),
         new Sphere(glm::vec3(0.0f, 0.0f, 0.0f), mirror, glm::vec3(0.4f, -1.f,0.9f), 0.5f),//G
         new Sphere(glm::vec3(0.2f, 0.2f, 0.2f), metal , glm::vec3(0.8f, 0.2f,1.5f), 0.3f),
-        new Triangle(glm::vec3(1.0f, 0.0f, 0.0f), matte , tr),
-        new Sphere(glm::vec3(0.2f, 0.2f, 0.2f), metal , glm::vec3(2.0f, 3.5f,4.3f), 0.2f),
+        new Triangle(glm::vec3(1.0f, 0.0f, 0.0f), mirror , tr),
+        new Sphere(glm::vec3(0.2f, 0.2f, 0.2f), metal , glm::vec3(1.1f, 3.4f,3.7f), 0.2f),
         //new Plane(glm::vec3(0.2f, 0.2f, 0.2f), metal),
         //new Model(glm::vec3(1.0f, 0.0f, 0.0f), 3.f, matte, "/home/d/projects/rt/duck.obj"),
     };     
