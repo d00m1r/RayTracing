@@ -21,23 +21,24 @@ class Material{
         Material(){};
         Material(const glm::vec4 &f, const float reflect, const float refract, const float shine):
             features(f), reflect(reflect), refract(refract), shine(shine){};
-    
-    Material& operator=(const Material& right) {
-            //проверка на самоприсваивание
-            if (this == &right) {
+        /*
+        Material& operator=(const Material& right) {
+                //проверка на самоприсваивание
+                if (this == &right) {
+                    return *this;
+                }
+                color    = right.color;
+                features = right.features;
+                reflect  = right.reflect;
+                refract  = right.refract;
+                shine    = right.shine;
                 return *this;
             }
-            color    = right.color;
-            features = right.features;
-            reflect  = right.reflect;
-            refract  = right.refract;
-            shine    = right.shine;
-            return *this;
-        }
+            */
 };
                         //color refl refr shine refl refr   shine
-Material matte  (glm::vec4(1.f, 0.f, 0.f, 1.f), 0.0f, 0.0f,  40.f);
-Material metal  (glm::vec4(1.f, 1.f, 0.f, 1.f), 0.4f, 0.0f,  5.f);
-Material glass  (glm::vec4(0.f, 1.f, 1.f, 1.f), 0.07f, 1.f,  150.f);
+Material matte  (glm::vec4(1.f, 0.f, 0.f, 1.f), 0.0f, 0.0f,  60.f);
+Material metal  (glm::vec4(1.f, 1.f, 0.f, 1.f), 0.125f, 0.0f,  5.f);
+Material glass  (glm::vec4(0.f, 1.f, 1.f, 1.f), 0.04f, 2.5f,  750.f);
 Material mirror (glm::vec4(0.f, 1.f, 0.f, 1.f), 0.85f, 0.0f, 100.f);
 #endif

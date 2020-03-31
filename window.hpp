@@ -14,7 +14,7 @@ struct Window{
     const int height = 768;
     const float fov = glm::pi<float>()/3;
 	float min_t = 0.001;
-    float max_t = 999999.0f;
+    float max_t = 99999999.0f;
     int depth = 6;
 
 };

@@ -9,8 +9,13 @@
 #include <glm/vec3.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/trigonometric.hpp>
+#include <cstdlib>
 
 #include "window.hpp"
+
+inline double random_double() {
+    return rand() / (RAND_MAX + 1.f);
+}
 
 class Ray{
     public:
@@ -33,8 +38,8 @@ class Ray{
 
 glm::vec3 ray_dir(int i, int j, Window win){
     glm::vec3 dir;
-    dir.x =  (i + 0.5f) -  (win.width/2.0f);
-    dir.y = (j + 0.5f) - (win.height/2.0f);
+    dir.x = (i + /*random_double() +*/ 0.5f) -  (win.width/2.0f);
+    dir.y = (j + /*random_double() +*/ 0.5f) - (win.height/2.0f);
     dir.z = -(win.width)/tan(win.fov/2.0f);
     return glm::normalize(dir);
 }

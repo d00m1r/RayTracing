@@ -25,42 +25,38 @@ class Light{
         float inten;
 };
 
-glm::vec3 refract(const glm::vec3 &I, const glm::vec3& n, const float eta_t, const float eta_i = 1.f) { 
-    float cosi = - std::max(-1.f, std::min(1.f, dot(I, n)));
+glm::vec3 refract(const glm::vec3 &I, const glm::vec3& normal, const float eta_t, const float eta_i = 1.f) { 
+    float cosi = - std::max(-1.f, std::min(1.f, dot(I, normal)));
     if (cosi<0){ 
-        return refract(I, -n, eta_i, eta_t);
+        return refract(I, -normal, eta_i, eta_t);
     }
     float eta = eta_i / eta_t;
     float k = 1 - eta*eta*(1 - cosi*cosi);
-    return k<0 ? glm::vec3(0.1f,0.1f,0.1f) : I * eta + n * (eta*cosi - sqrtf(k));
+    return k<0 ? glm::vec3(0.1f,0.1f,0.1f) : I * eta + normal * (eta*cosi - sqrtf(k));
 }
 
-glm::vec3 reflect(const glm::vec3&dir, glm::vec3 n){
-    return dot(n, dir)*2.f*n - dir;
-}//dir - ...
-
-glm::vec3 beam_shot(const Ray& ray, const std::vector<Object*>& obj_list, const std::vector<Light>& light_list, Window win, const glm::vec3& O, int depth, BMP& img){
+glm::vec3 beam_shot(const Ray& ray, const std::vector<Object*>& obj_list, const std::vector<Light>& light_list, Window win, const glm::vec3& start_pos, int depth, BMP& img){
     
     float cl_sol = win.max_t;
-    Object* cl_obj = determine_closest_object(ray, obj_list, win.min_t, win.max_t, cl_sol);
-    Sphere sphere;
+    auto cl_obj = determine_closest_object(ray, obj_list, win.min_t, win.max_t, cl_sol);
     if (cl_sol < win.max_t){
-        glm::vec3 point = O + cl_sol * ray.dir;//вычисление пересечения
-        glm::vec3 n = cl_obj->norm;//берём за нормаль (0,1,0) для плоскости
-        if (sphere == cl_obj){//если объект не плоскоть, меняем нормаль
-            n = point - cl_obj->center;//вычисление нормали сферы в точке пересечения
+        
+        glm::vec3 point = start_pos + cl_sol * ray.dir;// вычисление пересечения
+        glm::vec3 normal = cl_obj->norm;
+        if (cl_obj->type == "sphere"){
+            normal = point - cl_obj->center;// вычисление нормали сферы в точке пересечения
+            normal = normal / glm::length(normal);
         }
-        n = n / glm::length(n);
 
         float diff = 0.f, shine = 0.f;
         bool shadow_flag = false;
 
         for(long unsigned int i = 0; i < light_list.size(); i++){
             glm::vec3 l = light_list[i].pos - point;
-            Ray light(point, l);//инициализация луча света
-            glm::normalize(l);
-
-            //Тени
+            Ray light(point, l);//  инициализация луча света
+            //glm::normalize(l);
+            l = l/ glm::length(l);
+            // Тени
             float sh_sol = win.max_t;
             for(long unsigned int i = 0; i < obj_list.size(); i++){
                 determine_closest_object(light, obj_list, 0.001, win.max_t, sh_sol);
@@ -74,41 +70,37 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Object*>& obj_list, const 
                 continue;
             }
 
-            //Диффузия
+            // Диффузия
             if(cl_obj->mat.features[0] > 0){
-                float nl = dot(n, l);
+                float nl = dot(normal, l);
                 if (nl > 0){
-                    diff += light_list[i].inten * nl/(glm::length(n)*glm::length(l));
+                    diff += light_list[i].inten * nl/(glm::length(normal)*glm::length(l));
                 }
             }
 
-            //Сияние
+            // Сияние
             if (cl_obj->mat.features[3] > 0) {
-                glm::vec3 r = reflect(l, n);
-                float rv = dot(r, -ray.dir);
-                if (rv > 0){
-                    shine += light_list[i].inten*pow(rv/(glm::length(r) * glm::length(-ray.dir)), cl_obj->mat.shine);
-                    //shine += light_list[i].inten * pow(std::max(0.f, dot(-reflect(-l, n), -ray.dir)), cl_obj->mat.shine);
-                }
+                glm::vec3 r = glm::reflect(-l, normal);
+                //if (dot(r, -ray.dir) > 0){
+                    shine += light_list[i].inten*pow(dot(r, -ray.dir)/(glm::length(r) * glm::length(-ray.dir)), cl_obj->mat.shine);
+                //}
             }
         }
         
-        if(depth < 1){
-            return cl_obj->mat.color;
-        }
-
-        //Отражение
+        if(depth < 1){return cl_obj->mat.color;}
+            
+        // Отражение
         glm::vec3 reflect_color (0.f,0.f,0.f);
         if (cl_obj->mat.features[1]){
-            glm::vec3 reflect_dir = glm::normalize(reflect(-ray.dir, n));
+            glm::vec3 reflect_dir = glm::normalize(glm::reflect(ray.dir, normal));
             Ray reflect_ray(point, reflect_dir);
             reflect_color = beam_shot(reflect_ray, obj_list, light_list, win, point, depth - 1, img);
         }
 
-        //Преломление
+        // Преломление
         glm::vec3 refract_color (0.f,0.f,0.f);
         if (cl_obj->mat.features[2] > 0){   
-            glm::vec3 refract_dir = glm::normalize(refract(ray.dir, n, cl_obj->mat.refract));
+            glm::vec3 refract_dir = glm::normalize(refract(ray.dir, normal, cl_obj->mat.refract));
             Ray refract_ray(point, refract_dir);
             refract_color = beam_shot(refract_ray, obj_list, light_list, win, point, depth - 1, img);
         }

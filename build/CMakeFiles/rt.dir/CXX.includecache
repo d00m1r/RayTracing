@@ -769,6 +769,8 @@ glm/gtc/constants.hpp
 -
 glm/trigonometric.hpp
 -
+memory
+-
 window.hpp
 /home/d/projects/rt/window.hpp
 ray.hpp
@@ -805,6 +807,12 @@ glm/vec3.hpp
 -
 vector
 -
+cassert
+-
+fstream
+-
+sstream
+-
 ray.hpp
 /home/d/projects/rt/ray.hpp
 material.hpp
@@ -826,6 +834,8 @@ glm/vec3.hpp
 glm/gtc/constants.hpp
 -
 glm/trigonometric.hpp
+-
+cstdlib
 -
 window.hpp
 /home/d/projects/rt/window.hpp
