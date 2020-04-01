@@ -38,6 +38,7 @@ class Material{
 };
                         //color refl refr shine refl refr   shine
 Material matte  (glm::vec4(1.f, 0.f, 0.f, 1.f), 0.0f, 0.0f,  60.f);
+Material gloss  (glm::vec4(1.f, 1.f, 0.f, 1.f), 0.150f, 0.0f,  60.f);
 Material metal  (glm::vec4(1.f, 1.f, 0.f, 1.f), 0.125f, 0.0f,  5.f);
 Material glass  (glm::vec4(0.f, 1.f, 1.f, 1.f), 0.04f, 2.5f,  750.f);
 Material mirror (glm::vec4(0.f, 1.f, 0.f, 1.f), 0.85f, 0.0f, 100.f);

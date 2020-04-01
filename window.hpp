@@ -7,7 +7,6 @@
 #include <glm/vec3.hpp>
 
 #include "BMP/EasyBMP.h"
-//#include "BMP/EasyBMP.cpp"
 
 struct Window{
     const int width = 1280;
@@ -37,30 +36,18 @@ void save_image(Window win, std::vector<glm::vec3> buffer, char* name){
 	image.WriteToFile(name);
 }
 
-glm::vec3 look_image(BMP& img, float x, float y, Window& win) {
+glm::vec3 look_image(BMP& img, float x, float y) {
 	int Wi = img.TellWidth();
 	int He = img.TellHeight();
-	int W = 19200;
-	int H = 10800;
+	int W = Wi*7;
+	int H = He*7;
 	x *= W;
 	y *= H;
-	if(x > Wi){
-		x = (int)x%Wi;
-	}
-	if(y > He){
-		y = (int)y%He;
-	}
-	int j = x;
-	int i = y;
-	//if (j + 1 - x < x - j && j + 1 < W){
-	//	j++;
-	//}
-	//if (i + 1 - y < y - i && i + 1 < H) {
-	//	i++;
-	//}
-	unsigned char r = img(j, i)->Red;
-	unsigned char g = img(j, i)->Green;
-	unsigned char b = img(j, i)->Blue;
+	if(x > Wi) x=(int)x%Wi;
+	if(y > He) y=(int)y%He;
+	unsigned char r = img(x, y)->Red;
+	unsigned char g = img(x, y)->Green;
+	unsigned char b = img(x, y)->Blue;
 	float r1 = (float)r / 255;
 	float g1 = (float)g / 255;
 	float b1 = (float)b / 255;

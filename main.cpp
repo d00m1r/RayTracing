@@ -51,8 +51,8 @@ void make_render(){
         new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), mirror, glm::vec3(0.0f, -1.f ,0.f), 1.0f),
         new Triangle(glm::vec3(1.0f, 0.0f, 0.0f), mirror , tr),
         //Plane
-        new Triangle(glm::vec3(0.36f, 0.59f, 0.92f), matte , std::vector<glm::vec3> {glm::vec3(-win.inf, 0.0f ,win.inf),  glm::vec3(win.inf, 0.0f ,-win.inf), glm::vec3(-win.inf, 0.0f ,-win.inf)}),
-        new Triangle(glm::vec3(0.36f, 0.59f, 0.92f), matte , std::vector<glm::vec3> {glm::vec3(-win.inf, 0.0f ,win.inf), glm::vec3(win.inf,  0.0f , win.inf), glm::vec3( win.inf ,0.0f,-win.inf)}),
+        new Triangle(glm::vec3(0.36f, 0.59f, 0.92f), gloss , std::vector<glm::vec3> {glm::vec3(-win.inf, 0.0f ,win.inf),  glm::vec3(win.inf, 0.0f ,-win.inf), glm::vec3(-win.inf, 0.0f ,-win.inf)}),
+        new Triangle(glm::vec3(0.36f, 0.59f, 0.92f), gloss , std::vector<glm::vec3> {glm::vec3(-win.inf, 0.0f ,win.inf), glm::vec3(win.inf,  0.0f , win.inf), glm::vec3( win.inf ,0.0f,-win.inf)}),
     };     
 
     std::vector<Light> light_list{
@@ -62,7 +62,7 @@ void make_render(){
 
     glm::vec3 O1(0.0f, -0.5f, 20.0f);//прямо по Z
     BMP img;
-    img.ReadFromFile("/home/d/projects/rt/imgs/space.bmp");
+    img.ReadFromFile("/home/d/projects/rt/imgs/stars.bmp");
 
     for (int j = 0; j < win.height; j++){
         for (int i = 0; i < win.width; i++){

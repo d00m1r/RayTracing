@@ -116,7 +116,7 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Object*>& obj_list, const 
 
     float x = 0.5f + atan2f(ray.dir.z, ray.dir.x) / (2*win.pi);
     float y = 0.5f - glm::asin(ray.dir.y) / win.pi;
-    return look_image(img, x, y, win);
+    return look_image(img, x, y);
 }
 
 #endif
