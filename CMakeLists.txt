@@ -2,12 +2,16 @@ cmake_minimum_required (VERSION 3.8)
 
 set (PROJECT rt)
 set (SOURCE_EXE main.cpp)
-set (HEADERS BMP/EasyBMP.h
+set (HEADERS 
+            BMP/EasyBMP.h
+            BMP/EasyBMP.cpp
             window.hpp
             ray.hpp
             effects.hpp
             material.hpp
-            object.hpp)
+            object.hpp
+            space1.bmp)
+
 include_directories(
 	glm-0.9.7.1/
     BMP/
@@ -30,6 +34,7 @@ function(enable_cxx_compiler_flag_if_supported flag)
     endif()
 endfunction()
 
+     
 enable_cxx_compiler_flag_if_supported("-Wall")
 enable_cxx_compiler_flag_if_supported("-Wextra")
 enable_cxx_compiler_flag_if_supported("-pedantic")

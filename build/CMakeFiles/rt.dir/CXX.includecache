@@ -696,10 +696,6 @@ detail/type_vec4.hpp
 detail/func_vector_relational.hpp
 ../glm-0.9.7.1/glm/detail/func_vector_relational.hpp
 
-/home/d/projects/rt/BMP/EasyBMP.cpp
-EasyBMP.h
-/home/d/projects/rt/BMP/EasyBMP.h
-
 /home/d/projects/rt/BMP/EasyBMP.h
 iostream
 -
@@ -753,6 +749,8 @@ object.hpp
 /home/d/projects/rt/object.hpp
 material.hpp
 /home/d/projects/rt/material.hpp
+BMP/EasyBMP.h
+/home/d/projects/rt/BMP/EasyBMP.h
 
 /home/d/projects/rt/main.cpp
 iostream
@@ -781,6 +779,8 @@ object.hpp
 /home/d/projects/rt/object.hpp
 material.hpp
 /home/d/projects/rt/material.hpp
+BMP/EasyBMP.h
+/home/d/projects/rt/BMP/EasyBMP.h
 
 /home/d/projects/rt/material.hpp
 iostream
@@ -853,6 +853,4 @@ glm/vec3.hpp
 -
 BMP/EasyBMP.h
 /home/d/projects/rt/BMP/EasyBMP.h
-BMP/EasyBMP.cpp
-/home/d/projects/rt/BMP/EasyBMP.cpp
 

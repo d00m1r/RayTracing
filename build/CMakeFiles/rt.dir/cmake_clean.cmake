@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/rt.dir/BMP/EasyBMP.cpp.o"
   "CMakeFiles/rt.dir/main.cpp.o"
   "rt"
   "rt.pdb"

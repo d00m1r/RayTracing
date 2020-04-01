@@ -12,6 +12,7 @@
 #include "effects.hpp"
 #include "object.hpp"
 #include "material.hpp"
+#include "BMP/EasyBMP.h"
 
 void make_render(){
 
@@ -38,15 +39,20 @@ void make_render(){
     std::vector<glm::vec3> tr {glm::vec3(0.0f, 4.f ,4.3f), glm::vec3(2.0f, 4.f ,4.3f), glm::vec3(2.0f, 3.f ,1.f)};
 
     std::vector<Object*> obj_list{//дин массив указателей на объекты
-        new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), matte , glm::vec3(0.0f, 4.f ,-1.f), 3.0f),//R
-        new Sphere(glm::vec3(1.0f, 1.0f, 1.0f), glass , glm::vec3(0.0f, 0.f,-0.5f), 1.0f),
-        new Sphere(glm::vec3(0.0f, 0.0f, 0.0f), mirror, glm::vec3(0.4f, -1.f,0.9f), 0.5f),//G
-        new Sphere(glm::vec3(0.2f, 0.2f, 0.2f), metal , glm::vec3(0.8f, 0.2f,1.5f), 0.3f),
+        //new Sphere(glm::vec3(0.2f, 0.2f, 0.2f), metal , glm::vec3(1.1f, 3.4f,3.7f), 0.2f),
+        //new Sphere(glm::vec3(1.0f, 1.0f, 1.0f), glass , glm::vec3(0.0f, 0.f,-0.5f), 1.0f),
+        //new Sphere(glm::vec3(0.0f, 0.0f, 0.0f), mirror, glm::vec3(0.4f, -1.f,0.9f), 0.5f),//G
+        //new Sphere(glm::vec3(0.2f, 0.2f, 0.2f), metal , glm::vec3(0.8f, 0.2f,1.5f), 0.3f),
+
+        //far light sphere
+        new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), matte , glm::vec3(0.0f, 3.f ,0.f), 1.0f),
+
+        //close light sphere
+        new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), mirror, glm::vec3(0.0f, -1.f ,0.f), 1.0f),
         new Triangle(glm::vec3(1.0f, 0.0f, 0.0f), mirror , tr),
-        new Sphere(glm::vec3(0.2f, 0.2f, 0.2f), metal , glm::vec3(1.1f, 3.4f,3.7f), 0.2f),
         //Plane
-        new Triangle(glm::vec3(0.0f, 1.0f, 0.0f), matte , std::vector<glm::vec3> {glm::vec3(-win.inf, 4.0f ,win.inf),  glm::vec3(win.inf, 4.0f ,-win.inf), glm::vec3(-win.inf,4.0f ,-win.inf)}),
-        new Triangle(glm::vec3(0.0f, 1.0f, 0.0f), matte , std::vector<glm::vec3> {glm::vec3(-win.inf, 4.0f ,win.inf), glm::vec3(win.inf, 4.0f , win.inf), glm::vec3( win.inf ,4.0f,-win.inf)}),
+        new Triangle(glm::vec3(0.36f, 0.59f, 0.92f), matte , std::vector<glm::vec3> {glm::vec3(-win.inf, 0.0f ,win.inf),  glm::vec3(win.inf, 0.0f ,-win.inf), glm::vec3(-win.inf, 0.0f ,-win.inf)}),
+        new Triangle(glm::vec3(0.36f, 0.59f, 0.92f), matte , std::vector<glm::vec3> {glm::vec3(-win.inf, 0.0f ,win.inf), glm::vec3(win.inf,  0.0f , win.inf), glm::vec3( win.inf ,0.0f,-win.inf)}),
     };     
 
     std::vector<Light> light_list{
@@ -54,16 +60,16 @@ void make_render(){
         Light(glm::vec3(17.1f,-20.0f,64.0f), glm::vec3(1.0f,1.0f,1.0f),   0.5f)
     };
 
-    glm::vec3 O1(0.0f, -0.6f, 15.0f);//прямо по Z
+    glm::vec3 O1(0.0f, -0.5f, 20.0f);//прямо по Z
     BMP img;
-    img.ReadFromFile("space1.bmp");
+    img.ReadFromFile("/home/d/projects/rt/imgs/space.bmp");
 
     for (int j = 0; j < win.height; j++){
         for (int i = 0; i < win.width; i++){
             //auto u = int((i + random_double()) / win.width);
             //auto v = int((j + random_double()) / win.height);
             Ray ray(O1,O1);
-            ray = camera_set(O1, win, i, j, -0.19f, 0.f, 0.f); 
+            ray = camera_set(O1, win, i, j, 0.1f, 0.f, 0.f); 
             /*                              30    0    0   сверху
                                             0     60   0   сзади    
                                             0     90   0   слева 

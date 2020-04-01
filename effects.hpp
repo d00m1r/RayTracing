@@ -15,6 +15,7 @@
 #include "ray.hpp"
 #include "object.hpp"
 #include "material.hpp"
+#include "BMP/EasyBMP.h"
 
 class Light{
     public:
@@ -111,12 +112,11 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Object*>& obj_list, const 
         + glm::vec3(1.f,1.f,1.f) * shine;
     }
     //return glm::vec3 (0.f,0.f,0.f);
-    return glm::vec3(0.8f, 0.85f, 1.f); // BCKG col
-    //double pi = 3.141592653;// попали в небо  
-    //float phi = atan2f(ray.dir.x, ray.dir.y);
-    //phi /= (2 * pi);
-    //float tetta = (std::asin(ray.dir.z) + pi/2)/pi;
-    //return look_image(img, tetta, phi);
+    //return glm::vec3(0.8f, 0.85f, 1.f); // BCKG col
+
+    float x = 0.5f + atan2f(ray.dir.z, ray.dir.x) / (2*win.pi);
+    float y = 0.5f - glm::asin(ray.dir.y) / win.pi;
+    return look_image(img, x, y, win);
 }
 
 #endif

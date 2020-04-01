@@ -7,16 +7,17 @@
 #include <glm/vec3.hpp>
 
 #include "BMP/EasyBMP.h"
-#include "BMP/EasyBMP.cpp"
+//#include "BMP/EasyBMP.cpp"
 
 struct Window{
-    const int width = 1024;
-    const int height = 768;
+    const int width = 1280;
+    const int height = 720;
     const float fov = glm::pi<float>()/3;
 	float min_t = 0.001;
     float max_t = 99999999.0f;
     int depth = 6;
-	float inf = 150.f;
+	float inf = 25.f;
+	float pi = 3.1415926f;
 
 };
 
@@ -36,20 +37,27 @@ void save_image(Window win, std::vector<glm::vec3> buffer, char* name){
 	image.WriteToFile(name);
 }
 
-glm::vec3 look_image(BMP& img, float x, float y) {
-	int W = img.TellWidth();
-	int H = img.TellHeight();
-	int i,j;
+glm::vec3 look_image(BMP& img, float x, float y, Window& win) {
+	int Wi = img.TellWidth();
+	int He = img.TellHeight();
+	int W = 19200;
+	int H = 10800;
 	x *= W;
 	y *= H;
-	j = (int)x;
-	i = (int)y;
-	if ( j + 1 - x < x - j && j + 1 < W){
-		j++;
+	if(x > Wi){
+		x = (int)x%Wi;
 	}
-	if (i + 1 - y < y - i && i + 1 < H) {
-		i++;
+	if(y > He){
+		y = (int)y%He;
 	}
+	int j = x;
+	int i = y;
+	//if (j + 1 - x < x - j && j + 1 < W){
+	//	j++;
+	//}
+	//if (i + 1 - y < y - i && i + 1 < H) {
+	//	i++;
+	//}
 	unsigned char r = img(j, i)->Red;
 	unsigned char g = img(j, i)->Green;
 	unsigned char b = img(j, i)->Blue;

@@ -123,6 +123,33 @@ rt/fast:
 	$(MAKE) -f CMakeFiles/rt.dir/build.make CMakeFiles/rt.dir/build
 .PHONY : rt/fast
 
+BMP/EasyBMP.o: BMP/EasyBMP.cpp.o
+
+.PHONY : BMP/EasyBMP.o
+
+# target to build an object file
+BMP/EasyBMP.cpp.o:
+	$(MAKE) -f CMakeFiles/rt.dir/build.make CMakeFiles/rt.dir/BMP/EasyBMP.cpp.o
+.PHONY : BMP/EasyBMP.cpp.o
+
+BMP/EasyBMP.i: BMP/EasyBMP.cpp.i
+
+.PHONY : BMP/EasyBMP.i
+
+# target to preprocess a source file
+BMP/EasyBMP.cpp.i:
+	$(MAKE) -f CMakeFiles/rt.dir/build.make CMakeFiles/rt.dir/BMP/EasyBMP.cpp.i
+.PHONY : BMP/EasyBMP.cpp.i
+
+BMP/EasyBMP.s: BMP/EasyBMP.cpp.s
+
+.PHONY : BMP/EasyBMP.s
+
+# target to generate assembly for a file
+BMP/EasyBMP.cpp.s:
+	$(MAKE) -f CMakeFiles/rt.dir/build.make CMakeFiles/rt.dir/BMP/EasyBMP.cpp.s
+.PHONY : BMP/EasyBMP.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... rt"
 	@echo "... edit_cache"
+	@echo "... BMP/EasyBMP.o"
+	@echo "... BMP/EasyBMP.i"
+	@echo "... BMP/EasyBMP.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
