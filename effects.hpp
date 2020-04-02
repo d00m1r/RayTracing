@@ -53,8 +53,8 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Object*>& obj_list, const 
         for(long unsigned int i = 0; i < light_list.size(); i++){
             glm::vec3 l = light_list[i].pos - point;
             Ray light(point, l);//  инициализация луча света
-            //glm::normalize(l);
             l = l/ glm::length(l);
+            
             // Тени
             float sh_sol = win.max_t;
             for(long unsigned int i = 0; i < obj_list.size(); i++){
@@ -109,9 +109,6 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Object*>& obj_list, const 
         + refract_color 
         + glm::vec3(1.f,1.f,1.f) * shine;
     }
-    //return glm::vec3 (0.f,0.f,0.f);
-    //return glm::vec3(0.8f, 0.85f, 1.f); // BCKG col
-
     float x = 0.5f + atan2f(ray.dir.z, ray.dir.x) / (2*win.pi);
     float y = 0.5f - glm::asin(ray.dir.y) / win.pi;
     return look_image(img, x, y);

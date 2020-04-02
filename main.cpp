@@ -6,6 +6,7 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/trigonometric.hpp>
 #include <memory>
+#include <omp.h>
 
 #include "window.hpp"
 #include "ray.hpp"
@@ -48,8 +49,11 @@ void make_render(char* output_path, int& scene_number, int& threads){
     BMP img;
     img.ReadFromFile("../imgs/stars.bmp");
 
+    omp_set_num_threads(threads);
+
     if(scene_number == 1){
         glm::vec3 O1(0.0f, -0.5f, 20.0f);//прямо по Z
+        #pragma omp parallel for
         for (int j = 0; j < win.height; j++){
             for (int i = 0; i < win.width; i++){
                 //auto u = int((i + random_double()) / win.width);
@@ -68,6 +72,7 @@ void make_render(char* output_path, int& scene_number, int& threads){
 
     else if (scene_number == 2){
         glm::vec3 O1(0.0f, -50.0f, 0.0f);//прямо по Z
+        #pragma omp parallel for
         for (int j = 0; j < win.height; j++){
             for (int i = 0; i < win.width; i++){
                 //auto u = int((i + random_double()) / win.width);
