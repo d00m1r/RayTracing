@@ -6,5 +6,5 @@ CXX_FLAGS =  -Wall -Wextra -pedantic -std=c++11 -O3 -fopenmp
 
 CXX_DEFINES = -D_CRT_SECURE_NO_WARNINGS
 
-CXX_INCLUDES = -I/home/d/projects/rt/glm-0.9.7.1 -I/home/d/projects/rt/BMP 
+CXX_INCLUDES = -I/home/d/projects/rt/glm-0.9.7.1 -I/home/d/projects/rt/BMP -I/home/d/projects/rt/argparse 
 

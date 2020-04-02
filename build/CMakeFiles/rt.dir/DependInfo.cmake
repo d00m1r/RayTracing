@@ -18,6 +18,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../glm-0.9.7.1"
   "../BMP"
+  "../argparse"
   )
 
 # Targets to which this target links.

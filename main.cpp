@@ -14,27 +14,10 @@
 #include "material.hpp"
 #include "BMP/EasyBMP.h"
 
-void make_render(){
-
+void make_render(char* output_path, int& scene_number, int& threads){
     Window win;
     std::vector<glm::vec3> buffer(win.width * win.height);
     int displacement = win.width;
-    
-    //auto s1 = std::make_shared<Sphere>(glm::vec3(0.0f, 4.f,-1.f),  glm::vec3(1.0f, 0.0f, 0.0f), 3.f, matte);
-    //auto s2 = std::make_shared<Sphere>(glm::vec3(0.0f, 4.f,-1.f),  glm::vec3(1.0f, 0.0f, 0.0f), 3.f, matte);//R
-    //auto s3 = std::make_shared<Sphere>(glm::vec3(0.0f, 0.f,-0.5f),   glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glass);
-    //auto s4 = std::make_shared<Sphere>(glm::vec3(0.4f, -1.f,0.9f), glm::vec3(0.0f, 0.0f, 0.0f), 0.5f, mirror);//G
-    //auto s5 = std::make_shared<Sphere>(glm::vec3(0.8f, 0.2f,1.5f),  glm::vec3(0.4f, 0.4f, 0.4f), 0.3f, metal);
-    //auto p1 = std::make_shared<Plane>(glm::vec3(0.2f, 0.2f, 0.2f), metal),
-//
-//
-    //std::vector< std::shared_ptr<Object> > obj_list;//не удалось реализовать cast                                                               
-    //obj_list.push_back(std::move(s1));
-    //obj_list.push_back(std::move(s2));
-    //obj_list.push_back(std::move(s3));
-    //obj_list.push_back(std::move(s4));
-    //obj_list.push_back(std::move(s5));
-    //obj_list.push_back(std::move(p1));
 
     std::vector<glm::vec3> tr {glm::vec3(0.0f, 4.f ,4.3f), glm::vec3(2.0f, 4.f ,4.3f), glm::vec3(2.0f, 3.f ,1.f)};
 
@@ -62,34 +45,68 @@ void make_render(){
         //Light(glm::vec3(17.1f,-20.0f,64.0f), glm::vec3(1.0f,1.0f,1.0f),   0.5f)
     };
 
-    glm::vec3 O1(0.0f, -0.5f, 20.0f);//прямо по Z
     BMP img;
-    img.ReadFromFile("/home/d/projects/rt/imgs/stars.bmp");
+    img.ReadFromFile("../imgs/stars.bmp");
 
-    for (int j = 0; j < win.height; j++){
-        for (int i = 0; i < win.width; i++){
-            //auto u = int((i + random_double()) / win.width);
-            //auto v = int((j + random_double()) / win.height);
-            Ray ray(O1,O1);
-            ray = camera_set(O1, win, i, j, 0.1f, 0.f, 0.f); 
-            /*                              30    0    0   сверху
-                                            0     60   0   сзади    
-                                            0     90   0   слева 
-                                            0     0    240 перевернуть 
-                                                                */
-            buffer[j * displacement + i] = beam_shot(ray, obj_list, light_list, win, O1, win.depth, img);//ret col
+    if(scene_number == 1){
+        glm::vec3 O1(0.0f, -0.5f, 20.0f);//прямо по Z
+        for (int j = 0; j < win.height; j++){
+            for (int i = 0; i < win.width; i++){
+                //auto u = int((i + random_double()) / win.width);
+                //auto v = int((j + random_double()) / win.height);
+                Ray ray(O1,O1);
+                ray = camera_set(O1, win, i, j, 0.1f, 0.f, 0.f); 
+                /*                              30    0    0   сверху
+                                                0     60   0   сзади    
+                                                0     90   0   слева 
+                                                0     0    240 перевернуть 
+                                                                    */
+                buffer[j * displacement + i] = beam_shot(ray, obj_list, light_list, win, O1, win.depth, img);//ret col
+            }
         }
     }
-    
+
+    else if (scene_number == 2){
+        glm::vec3 O1(0.0f, -50.0f, 0.0f);//прямо по Z
+        for (int j = 0; j < win.height; j++){
+            for (int i = 0; i < win.width; i++){
+                //auto u = int((i + random_double()) / win.width);
+                //auto v = int((j + random_double()) / win.height);
+                Ray ray(O1,O1);
+                ray = camera_set(O1, win, i, j, -win.pi/2.f, 0.f, 0.f); 
+                /*                              30    0    0   сверху
+                                                0     60   0   сзади    
+                                                0     90   0   слева 
+                                                0     0    240 перевернуть 
+                                                                    */
+                buffer[j * displacement + i] = beam_shot(ray, obj_list, light_list, win, O1, win.depth, img);//ret col
+            }
+        }
+    }
+
     //Освобождение памяти
     for(int i = 0; i < (int)obj_list.size(); ++i)
         delete obj_list[i];
 
-    char name[] = "scene.bmp";
-    save_image(win, buffer, name);    
+    save_image(win, buffer, output_path);    
 }
 
-int main(){
-    make_render();
+int main(int argc, char *argv[]){
+    int scene_number = 1;
+    int threads = 1;
+    char *output_path = "314_damir_miniakhmetov.bmp";
+    for (int count=0; count < argc; ++count){
+        if (!strcmp(argv[count], "-out"))  output_path = argv[++count];
+        if (!strcmp(argv[count], "-scene")){  
+            std::stringstream convert(argv[++count]);
+	        if(!(convert >> scene_number)) scene_number = 1;
+        }
+        if (!strcmp(argv[count], "-threads")){
+            std::stringstream convert(argv[++count]);
+	        if(!(convert >> threads)) threads = 1;
+        }
+    }
+    if(scene_number < 1 || scene_number > 2) exit(0);
+    make_render(output_path, scene_number, threads);
     return 0;
 }
