@@ -2633,3 +2633,195 @@ gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
 
 Source file was:
 int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_c8c67/fast && /usr/bin/gmake -f CMakeFiles/cmTC_c8c67.dir/build.make CMakeFiles/cmTC_c8c67.dir/build
+gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_c8c67.dir/src.cxx.o
+/usr/bin/c++    -Dflag_supported   -Wall -o CMakeFiles/cmTC_c8c67.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_c8c67
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c8c67.dir/link.txt --verbose=1
+/usr/bin/c++   -Dflag_supported    CMakeFiles/cmTC_c8c67.dir/src.cxx.o  -o cmTC_c8c67 
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_6bb80/fast && /usr/bin/gmake -f CMakeFiles/cmTC_6bb80.dir/build.make CMakeFiles/cmTC_6bb80.dir/build
+gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_6bb80.dir/src.cxx.o
+/usr/bin/c++    -Wall -Dflag_supported   -Wextra -o CMakeFiles/cmTC_6bb80.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_6bb80
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6bb80.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Dflag_supported    CMakeFiles/cmTC_6bb80.dir/src.cxx.o  -o cmTC_6bb80 
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_c1b3e/fast && /usr/bin/gmake -f CMakeFiles/cmTC_c1b3e.dir/build.make CMakeFiles/cmTC_c1b3e.dir/build
+gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_c1b3e.dir/src.cxx.o
+/usr/bin/c++    -Wall -Wextra -Dflag_supported   -pedantic -o CMakeFiles/cmTC_c1b3e.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_c1b3e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c1b3e.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -Dflag_supported    CMakeFiles/cmTC_c1b3e.dir/src.cxx.o  -o cmTC_c1b3e 
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_43d5b/fast && /usr/bin/gmake -f CMakeFiles/cmTC_43d5b.dir/build.make CMakeFiles/cmTC_43d5b.dir/build
+gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_43d5b.dir/src.cxx.o
+/usr/bin/c++    -Wall -Wextra -pedantic -Dflag_supported   -std=c++11 -o CMakeFiles/cmTC_43d5b.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_43d5b
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_43d5b.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -pedantic -Dflag_supported    CMakeFiles/cmTC_43d5b.dir/src.cxx.o  -o cmTC_43d5b 
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_bc533/fast && /usr/bin/gmake -f CMakeFiles/cmTC_bc533.dir/build.make CMakeFiles/cmTC_bc533.dir/build
+gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_bc533.dir/src.cxx.o
+/usr/bin/c++    -Wall -Wextra -pedantic -std=c++11 -Dflag_supported   -O3 -o CMakeFiles/cmTC_bc533.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_bc533
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bc533.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -pedantic -std=c++11 -Dflag_supported    CMakeFiles/cmTC_bc533.dir/src.cxx.o  -o cmTC_bc533 
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_ff5df/fast && /usr/bin/gmake -f CMakeFiles/cmTC_ff5df.dir/build.make CMakeFiles/cmTC_ff5df.dir/build
+gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_ff5df.dir/src.cxx.o
+/usr/bin/c++    -Wall -Wextra -pedantic -std=c++11 -O3 -Dflag_supported   -fopenmp -o CMakeFiles/cmTC_ff5df.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_ff5df
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ff5df.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -pedantic -std=c++11 -O3 -Dflag_supported    CMakeFiles/cmTC_ff5df.dir/src.cxx.o  -o cmTC_ff5df 
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_73984/fast && gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+/usr/bin/gmake -f CMakeFiles/cmTC_73984.dir/build.make CMakeFiles/cmTC_73984.dir/build
+gmake[2]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_73984.dir/src.cxx.o
+/usr/bin/c++    -Dflag_supported   -Wall -o CMakeFiles/cmTC_73984.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_73984
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_73984.dir/link.txt --verbose=1
+/usr/bin/c++   -Dflag_supported    CMakeFiles/cmTC_73984.dir/src.cxx.o  -o cmTC_73984 
+gmake[2]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_c1f9f/fast && gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+/usr/bin/gmake -f CMakeFiles/cmTC_c1f9f.dir/build.make CMakeFiles/cmTC_c1f9f.dir/build
+gmake[2]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_c1f9f.dir/src.cxx.o
+/usr/bin/c++    -Wall -Dflag_supported   -Wextra -o CMakeFiles/cmTC_c1f9f.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_c1f9f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c1f9f.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Dflag_supported    CMakeFiles/cmTC_c1f9f.dir/src.cxx.o  -o cmTC_c1f9f 
+gmake[2]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_7b034/fast && gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+/usr/bin/gmake -f CMakeFiles/cmTC_7b034.dir/build.make CMakeFiles/cmTC_7b034.dir/build
+gmake[2]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_7b034.dir/src.cxx.o
+/usr/bin/c++    -Wall -Wextra -Dflag_supported   -pedantic -o CMakeFiles/cmTC_7b034.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_7b034
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7b034.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -Dflag_supported    CMakeFiles/cmTC_7b034.dir/src.cxx.o  -o cmTC_7b034 
+gmake[2]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_d2134/fast && gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+/usr/bin/gmake -f CMakeFiles/cmTC_d2134.dir/build.make CMakeFiles/cmTC_d2134.dir/build
+gmake[2]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_d2134.dir/src.cxx.o
+/usr/bin/c++    -Wall -Wextra -pedantic -Dflag_supported   -std=c++11 -o CMakeFiles/cmTC_d2134.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_d2134
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d2134.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -pedantic -Dflag_supported    CMakeFiles/cmTC_d2134.dir/src.cxx.o  -o cmTC_d2134 
+gmake[2]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_42cae/fast && gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+/usr/bin/gmake -f CMakeFiles/cmTC_42cae.dir/build.make CMakeFiles/cmTC_42cae.dir/build
+gmake[2]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_42cae.dir/src.cxx.o
+/usr/bin/c++    -Wall -Wextra -pedantic -std=c++11 -Dflag_supported   -O3 -o CMakeFiles/cmTC_42cae.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_42cae
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_42cae.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -pedantic -std=c++11 -Dflag_supported    CMakeFiles/cmTC_42cae.dir/src.cxx.o  -o cmTC_42cae 
+gmake[2]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test flag_supported succeeded with the following output:
+Change Dir: /home/d/projects/rt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_34d13/fast && gmake[1]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+/usr/bin/gmake -f CMakeFiles/cmTC_34d13.dir/build.make CMakeFiles/cmTC_34d13.dir/build
+gmake[2]: Entering directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_34d13.dir/src.cxx.o
+/usr/bin/c++    -Wall -Wextra -pedantic -std=c++11 -O3 -Dflag_supported   -fopenmp -o CMakeFiles/cmTC_34d13.dir/src.cxx.o -c /home/d/projects/rt/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_34d13
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_34d13.dir/link.txt --verbose=1
+/usr/bin/c++   -Wall -Wextra -pedantic -std=c++11 -O3 -Dflag_supported    CMakeFiles/cmTC_34d13.dir/src.cxx.o  -o cmTC_34d13 
+gmake[2]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+gmake[1]: Leaving directory '/home/d/projects/rt/build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }

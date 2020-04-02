@@ -220,7 +220,7 @@ Object* determine_closest_object(const Ray& ray, const std::vector<Object*>& obj
             cl_obj = (Object*)obj_list[i];//!upcast
         }
     }
-    if (el_num != -1 && (cl_type == "model" || cl_type == "plane")){return (Object*)cl_obj->mesh[el_num];}
+    if (el_num != -1 && (cl_type == "model" || cl_type == "plane")) return (Object*)cl_obj->mesh[el_num];
     return cl_obj;
 }
 

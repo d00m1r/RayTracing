@@ -28,9 +28,7 @@ class Light{
 
 glm::vec3 refract(const glm::vec3 &I, const glm::vec3& normal, const float eta_t, const float eta_i = 1.f) { 
     float cosi = - std::max(-1.f, std::min(1.f, dot(I, normal)));
-    if (cosi<0){ 
-        return refract(I, -normal, eta_i, eta_t);
-    }
+    if (cosi<0) return refract(I, -normal, eta_i, eta_t);
     float eta = eta_i / eta_t;
     float k = 1 - eta*eta*(1 - cosi*cosi);
     return k<0 ? glm::vec3(0.1f,0.1f,0.1f) : I * eta + normal * (eta*cosi - sqrtf(k));
@@ -88,7 +86,7 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Object*>& obj_list, const 
             }
         }
         
-        if(depth < 1){return cl_obj->mat.color;}
+        if(depth < 1) return cl_obj->mat.color;
             
         // Отражение
         glm::vec3 reflect_color (0.f,0.f,0.f);

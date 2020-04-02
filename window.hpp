@@ -39,10 +39,8 @@ void save_image(Window win, std::vector<glm::vec3> buffer, char* name){
 glm::vec3 look_image(BMP& img, float x, float y) {
 	int Wi = img.TellWidth();
 	int He = img.TellHeight();
-	int W = Wi*7;
-	int H = He*7;
-	x *= W;
-	y *= H;
+	x *= Wi*7;
+	y *= He*7;
 	if(x > Wi) x=(int)x%Wi;
 	if(y > He) y=(int)y%He;
 	unsigned char r = img(x, y)->Red;

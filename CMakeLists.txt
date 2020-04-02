@@ -10,7 +10,7 @@ set (HEADERS
             effects.hpp
             material.hpp
             object.hpp
-            space1.bmp)
+                    )
 
 include_directories(
 	glm-0.9.7.1/
