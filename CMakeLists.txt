@@ -15,7 +15,6 @@ set (HEADERS
 include_directories(
 	glm-0.9.7.1/
     BMP/
-    argparse/
 )
 project (${PROJECT})
 

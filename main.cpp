@@ -20,30 +20,35 @@ void make_render(char* output_path, int& scene_number, int& threads){
     std::vector<glm::vec3> buffer(win.width * win.height);
     int displacement = win.width;
 
-    std::vector<glm::vec3> tr {glm::vec3(0.0f, 4.f ,4.3f), glm::vec3(2.0f, 4.f ,4.3f), glm::vec3(2.0f, 3.f ,1.f)};
+    std::vector<glm::vec3> tr1 {glm::vec3(0.0f, 0.f ,-6.f), glm::vec3(-1.0f, -7.f ,-1.f), glm::vec3(-9.0f, 0.f ,3.f)};
+    std::vector<glm::vec3> tr2 {glm::vec3(-9.0f, 0.f ,3.f), glm::vec3(-1.0f, -7.f ,-1.f), glm::vec3(-7.0f, 0.f ,-6.f)};
+    std::vector<glm::vec3> tr3 {glm::vec3(-7.0f, 0.f ,-6.f), glm::vec3(-1.0f, -7.f ,-1.f), glm::vec3(0.0f, 0.f ,-6.f)};
 
     std::vector<Object*> obj_list{//дин массив указателей на объекты
-        new Sphere(glm::vec3(0.0f, 0.0f, 1.0f), matte, glm::vec3(3.0f, -1.f ,-3.f), 1.0f),
-        new Sphere(glm::vec3(0.0f, 0.0f, 1.0f), gloss, glm::vec3(-3.0f, -1.f ,3.f), 1.0f),
-        new Sphere(glm::vec3(1.0f, 0.0f, 0.0f), glass, glm::vec3(0.0f, -0.3f ,7.f), 0.3f),
-        new Sphere(glm::vec3(0.2f, 0.2f, 0.2f), metal, glm::vec3(6.0f, -2.f ,-6.f), 2.0f),
-        
         //far light sphere
-        new Sphere(glm::vec3(1.0f, 1.0f, 1.0f), lamp , glm::vec3(0.0f, -14.f , -52.f), 0.4f),
+        new Sphere(glm::vec3(1.0f, 1.0f, 1.0f), lamp , glm::vec3(0.0f, -14.f , -52.f), 0.2f),
 
-        //central sphere
-        new Sphere(glm::vec3(1.0f, 1.0f, 1.0f), mirror, glm::vec3(0.0f, -1.f ,-1.f), 1.0f),
+        new Sphere(glm::vec3(0.36f, 0.59f, 0.92f), matte, glm::vec3(3.0f, -1.f ,-3.f), 1.f),
+        new Sphere(glm::vec3(0.0f, 0.0f, 1.0f), glass, glm::vec3(-1.7f, -0.7f ,5.f), 0.7f),
+        new Sphere(glm::vec3(0.58f, 0.36f, 2.f), matte, glm::vec3(-0.7f, -0.35f ,7.f), 0.35f),
+        new Sphere(glm::vec3(2.f, 2.f, 0.f), gloss, glm::vec3(-3.5f, -0.7f ,0.1f),0.4f),
+        new Sphere(glm::vec3(0.f, 0.93f, 0.93f), metal, glm::vec3(-0.5f, -0.3f ,-0.1f),1.f),
+        new Sphere(glm::vec3(0.4f, 0.4f, 0.4f), metal, glm::vec3(1.0f, -0.6f ,-1.5f), 0.6f),
+        new Sphere(glm::vec3(1.0f, 1.0f, 1.0f), mirror, glm::vec3(4.0f, -1.5f ,-0.5f), 1.5f),
 
-        new Triangle(glm::vec3(1.0f, 0.0f, 0.0f), mirror , tr),
+        //Triangle pyramid
+        new Triangle(glm::vec3(1.0f, 0.0f, 0.0f), mirror , tr1),
+        new Triangle(glm::vec3(1.0f, 0.0f, 0.0f), mirror , tr2),
+        new Triangle(glm::vec3(1.0f, 0.0f, 0.0f), mirror , tr3),
+        
         //Plane
         new Triangle(glm::vec3(0.36f, 0.59f, 0.92f), gloss , std::vector<glm::vec3> {glm::vec3(-win.inf, 0.0f ,win.inf),  glm::vec3(win.inf, 0.0f ,-win.inf), glm::vec3(-win.inf, 0.0f ,-win.inf)}),
         new Triangle(glm::vec3(0.36f, 0.59f, 0.92f), gloss , std::vector<glm::vec3> {glm::vec3(-win.inf, 0.0f ,win.inf), glm::vec3(win.inf,  0.0f , win.inf), glm::vec3( win.inf ,0.0f,-win.inf)}),
     };     
 
     std::vector<Light> light_list{
-        Light(glm::vec3(14.7f,-12.0f,14.0f),   glm::vec3(1.0f,1.0f,1.0f), 0.3f),
-        Light(glm::vec3(0.0f,-12.f, -50.0f),   glm::vec3(1.0f,1.0f,1.0f), 0.7f),
-        //Light(glm::vec3(17.1f,-20.0f,64.0f), glm::vec3(1.0f,1.0f,1.0f),   0.5f)
+        Light(glm::vec3(14.7f,-12.0f,14.0f), 0.3f),
+        Light(glm::vec3(0.0f,-12.f, -50.0f), 0.7f),
     };
 
     BMP img;
@@ -51,40 +56,26 @@ void make_render(char* output_path, int& scene_number, int& threads){
 
     omp_set_num_threads(threads);
 
-    if(scene_number == 1){
-        glm::vec3 O1(0.0f, -0.5f, 20.0f);//прямо по Z
+    if(scene_number == 1){//Вид спереди
+        glm::vec3 O1(0.0f, -0.5f, 20.0f);
         #pragma omp parallel for
         for (int j = 0; j < win.height; j++){
             for (int i = 0; i < win.width; i++){
-                //auto u = int((i + random_double()) / win.width);
-                //auto v = int((j + random_double()) / win.height);
                 Ray ray(O1,O1);
                 ray = camera_set(O1, win, i, j, 0.1f, 0.f, 0.f); 
-                /*                              30    0    0   сверху
-                                                0     60   0   сзади    
-                                                0     90   0   слева 
-                                                0     0    240 перевернуть 
-                                                                    */
-                buffer[j * displacement + i] = beam_shot(ray, obj_list, light_list, win, O1, win.depth, img);//ret col
+                buffer[j * displacement + i] = beam_shot(ray, obj_list, light_list, win, O1, win.depth, img);
             }
         }
     }
 
-    else if (scene_number == 2){
-        glm::vec3 O1(0.0f, -50.0f, 0.0f);//прямо по Z
+    else if (scene_number == 2){//Вид сверху
+        glm::vec3 O1(0.0f, -50.0f, 0.0f);
         #pragma omp parallel for
         for (int j = 0; j < win.height; j++){
             for (int i = 0; i < win.width; i++){
-                //auto u = int((i + random_double()) / win.width);
-                //auto v = int((j + random_double()) / win.height);
                 Ray ray(O1,O1);
                 ray = camera_set(O1, win, i, j, -win.pi/2.f, 0.f, 0.f); 
-                /*                              30    0    0   сверху
-                                                0     60   0   сзади    
-                                                0     90   0   слева 
-                                                0     0    240 перевернуть 
-                                                                    */
-                buffer[j * displacement + i] = beam_shot(ray, obj_list, light_list, win, O1, win.depth, img);//ret col
+                buffer[j * displacement + i] = beam_shot(ray, obj_list, light_list, win, O1, win.depth, img);
             }
         }
     }

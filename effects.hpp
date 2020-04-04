@@ -19,9 +19,8 @@
 
 class Light{
     public:
-        Light(const glm::vec3&position, const glm::vec3& col, float intensity): color(col), pos(position), inten(intensity){};
+        Light(const glm::vec3&position, float intensity): pos(position), inten(intensity){};
         ~Light(){};
-        glm::vec3 color;
         glm::vec3 pos;
         float inten;
 };
@@ -80,9 +79,7 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Object*>& obj_list, const 
             // Сияние
             if (cl_obj->mat.features[3] > 0) {
                 glm::vec3 r = glm::reflect(-l, normal);
-                //if (dot(r, -ray.dir) > 0){
-                    shine += light_list[i].inten*pow(dot(r, -ray.dir)/(glm::length(r) * glm::length(-ray.dir)), cl_obj->mat.shine);
-                //}
+                shine += light_list[i].inten*pow(dot(r, -ray.dir)/(glm::length(r) * glm::length(-ray.dir)), cl_obj->mat.shine);
             }
         }
         
@@ -104,7 +101,7 @@ glm::vec3 beam_shot(const Ray& ray, const std::vector<Object*>& obj_list, const 
             refract_color = beam_shot(refract_ray, obj_list, light_list, win, point, depth - 1, img);
         }
 
-        return /*(1.f - cl_obj->mat.reflect) */cl_obj->mat.color * cl_obj->mat.features[0] * diff 
+        return cl_obj->mat.color * cl_obj->mat.features[0] * diff 
         + reflect_color * cl_obj->mat.reflect
         + refract_color 
         + glm::vec3(1.f,1.f,1.f) * shine;

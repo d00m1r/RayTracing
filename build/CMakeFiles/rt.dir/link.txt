@@ -1,1 +1,0 @@
-/usr/bin/c++   -Wall -Wextra -pedantic -std=c++11 -O3 -fopenmp   CMakeFiles/rt.dir/main.cpp.o CMakeFiles/rt.dir/BMP/EasyBMP.cpp.o  -o rt 
