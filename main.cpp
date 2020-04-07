@@ -7,6 +7,7 @@
 #include <glm/trigonometric.hpp>
 #include <memory>
 #include <omp.h>
+#include <chrono>
 
 #include "window.hpp"
 #include "ray.hpp"
@@ -88,6 +89,7 @@ void make_render(char* output_path, int& scene_number, int& threads){
 }
 
 int main(int argc, char *argv[]){
+    auto begin = std::chrono::steady_clock::now();
     int scene_number = 1;
     int threads = 1;
     char *output_path = "314_damir_miniakhmetov.bmp";
@@ -104,5 +106,9 @@ int main(int argc, char *argv[]){
     }
     if(scene_number < 1 || scene_number > 2) exit(0);
     make_render(output_path, scene_number, threads);
+
+    auto end = std::chrono::steady_clock::now();
+    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+    std::cout<<"Time: "<<elapsed_ms.count()<<" secs"<<std::endl; // Время в мс
     return 0;
 }

@@ -34,8 +34,8 @@ class Ray{
 
 glm::vec3 ray_dir(int i, int j, Window win){
     glm::vec3 dir;
-    dir.x = (i + /*random_double() +*/ 0.5f) -  (win.width/2.0f);
-    dir.y = (j + /*random_double() +*/ 0.5f) - (win.height/2.0f);
+    dir.x = (i + 0.5f) -  (win.width/2.0f);
+    dir.y = (j + 0.5f) - (win.height/2.0f);
     dir.z = -(win.width)/tan(win.fov/2.0f);
     return glm::normalize(dir);
 }

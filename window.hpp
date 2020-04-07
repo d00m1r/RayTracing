@@ -9,8 +9,8 @@
 #include "BMP/EasyBMP.h"
 
 struct Window{
-    const int width = 1280;
-    const int height = 720;
+    const int width = 800; // РАЗРЕШЕНИЕ МЕНЯТЬ ЗДЕСЬ
+    const int height = 480;
     const float fov = glm::pi<float>()/3;
 	float min_t = 0.001;
     float max_t = 99999999.0f;
