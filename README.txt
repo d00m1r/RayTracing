@@ -17,5 +17,5 @@
 http://ray-tracing.ru/
 https://raytracing.github.io/books/RayTracingInOneWeekend.html
 
-![Screenshot](RayTracing1.png)
-![Screenshot](https://github.com/d00m1r/RayTracing/blob/master/RayTracing2.png)
+![alt tag](https://github.com/d00m1r/RayTracing/blob/master/RayTracing1.png)
+![alt tag](https://github.com/d00m1r/RayTracing/blob/master/RayTracing2.png)
